@@ -1,0 +1,2 @@
+import {NextResponse} from "next/server";import {db} from "@/lib/prisma";
+export async function POST(req:Request){const b=await req.json();if(!b.name||!b.email||!b.date||!b.time)return NextResponse.json({error:"Missing fields"},{status:400});return NextResponse.json(await db.appointment.create({data:{name:b.name,email:b.email,service:b.service||null,date:b.date,time:b.time,message:b.message||null}}))}

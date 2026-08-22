@@ -1,0 +1,2 @@
+import {NextResponse} from "next/server";import {db} from "@/lib/prisma";import {admin} from "@/lib/auth";
+export async function POST(req:Request){if(!(await admin()))return NextResponse.json({error:"Unauthorized"},{status:401});const {type,data}=await req.json();try{const x=type==="service"?await db.service.create({data}):type==="portfolio"?await db.portfolio.create({data}):type==="blog"?await db.blogPost.create({data}):await db.testimonial.create({data});return NextResponse.json(x)}catch(e){return NextResponse.json({error:String(e)},{status:400})}}

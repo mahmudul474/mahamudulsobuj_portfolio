@@ -1,0 +1,2 @@
+import {db} from "@/lib/prisma";import {Header} from "@/components/header";
+export default async function Page(){const p=await db.profile.findFirst();return <><Header/><main className="mx-auto max-w-4xl px-5 pb-24 pt-40"><p className="text-xs uppercase tracking-[.3em] text-[var(--primary)]">About</p><h1 className="mt-4 font-display text-6xl font-bold">{p?.name}</h1><p className="mt-8 text-xl leading-8 text-zinc-400">{p?.bio}</p><p className="mt-8 text-zinc-500">{p?.title}</p></main></>}

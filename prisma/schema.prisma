@@ -1,0 +1,94 @@
+ generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id        String   @id @default("profile")
+  name      String
+  title     String
+  bio       String
+  avatar    String?
+  email     String?
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  description String
+  image       String?
+  featured    Boolean  @default(false)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Portfolio {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  client      String?
+  category    String?
+  excerpt     String
+  description String
+  image       String?
+  liveUrl     String?
+  featured    Boolean  @default(false)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String
+  image       String?
+  category    String?
+  tags        String?
+  published   Boolean  @default(true)
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String?
+  company   String?
+  quote     String
+  rating    Int      @default(5)
+  featured  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Appointment {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  service   String?
+  date      String
+  time      String
+  message   String?
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+}
+
+model SiteSettings {
+  id          String   @id @default("main")
+  siteName    String   @default("Mahamudul Hasan")
+  primary     String   @default("#00ff88")
+  accent      String   @default("#7c3aed")
+  dark        Boolean  @default(true)
+  animations  Boolean  @default(true)
+  cursor      Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+}
