@@ -58,11 +58,13 @@ export default function Hero() {
       id="home"
       className="
         relative
-        min-h-[100svh]
+        min-h-0
         w-full
         overflow-hidden
         bg-[#050507]
         text-white
+
+        lg:min-h-[100svh]
       "
     >
       {/* =====================================================
@@ -237,17 +239,19 @@ export default function Hero() {
           z-10
           mx-auto
           flex
-          min-h-[100svh]
           w-full
           max-w-[1440px]
           flex-col
+
           px-5
-          pb-10
-          pt-[100px]
+          pb-2
+          pt-[90px]
 
           sm:px-8
-          sm:pt-[130px]
+          sm:pb-4
+          sm:pt-[110px]
 
+          lg:min-h-[100svh]
           lg:px-12
           lg:pb-12
           lg:pt-[110px]
@@ -260,7 +264,8 @@ export default function Hero() {
             grid
             flex-1
             items-center
-            gap-4
+
+            gap-3
 
             sm:gap-4
 
@@ -299,9 +304,7 @@ export default function Hero() {
               Shopify Specialist · Developer · CRO
             </motion.p>
 
-            {/* =================================================
-                MAIN TITLE
-            ================================================== */}
+            {/* Main Title */}
 
             <motion.h1
               variants={entrance}
@@ -677,13 +680,13 @@ export default function Hero() {
               relative
               mx-auto
               flex
-              min-h-[510px]
+              min-h-[455px]
               w-full
               max-w-[500px]
               items-start
               justify-center
 
-              min-[375px]:min-h-[540px]
+              min-[375px]:min-h-[480px]
 
               sm:min-h-[580px]
 
@@ -692,7 +695,9 @@ export default function Hero() {
               xl:min-h-[710px]
             "
           >
-            {/* ORBIT 1 */}
+            {/* =================================================
+                ORBIT 1
+            ================================================== */}
 
             <motion.div
               className="
@@ -861,7 +866,10 @@ export default function Hero() {
               }}
             />
 
-            {/* SHOPIFY BADGE — DESKTOP ONLY */}
+            {/* =================================================
+                SHOPIFY BADGE
+                DESKTOP ONLY
+            ================================================== */}
 
             <motion.div
               initial={{
@@ -895,7 +903,7 @@ export default function Hero() {
                         y: [0, -7, 0],
                         rotate: [0, 2, -2, 0],
                       }
-                }
+                  }
                 transition={{
                   duration: 5,
                   repeat: Infinity,
@@ -999,7 +1007,7 @@ export default function Hero() {
                 }}
               />
 
-              {/* MAHAMUDUL HERO IMAGE */}
+              {/* MAHAMUDUL IMAGE */}
 
               <motion.img
                 src="/images/mahamudulhero.png"
@@ -1040,7 +1048,7 @@ export default function Hero() {
                   bottom-[1%]
                   left-1/2
                   z-20
-                  h-[95px]
+                  h-[75px]
                   w-[92%]
                   -translate-x-1/2
                   rounded-[50%]
@@ -1078,7 +1086,7 @@ export default function Hero() {
                   bottom-[2%]
                   left-1/2
                   z-[5]
-                  h-[45px]
+                  h-[40px]
                   w-[78%]
                   -translate-x-1/2
                   rounded-full
@@ -1112,11 +1120,11 @@ export default function Hero() {
               className="
                 absolute
                 right-[2%]
-                top-[10%]
+                top-[8%]
                 z-30
 
                 min-[375px]:right-[3%]
-                min-[375px]:top-[11%]
+                min-[375px]:top-[9%]
 
                 sm:right-[1%]
                 sm:top-[16%]
@@ -1167,6 +1175,7 @@ export default function Hero() {
 
             {/* =================================================
                 CARD 2 — PROJECTS
+                MOVED CLOSER TO IMAGE
             ================================================== */}
 
             <motion.div
@@ -1187,11 +1196,11 @@ export default function Hero() {
               className="
                 absolute
                 left-[2%]
-                bottom-[14%]
+                bottom-[27%]
                 z-30
 
                 min-[375px]:left-[3%]
-                min-[375px]:bottom-[14%]
+                min-[375px]:bottom-[25%]
 
                 sm:left-[0%]
                 sm:bottom-[17%]
@@ -1242,7 +1251,7 @@ export default function Hero() {
 
             {/* =================================================
                 CARD 3 — CRO
-                MOBILE MOVED UP
+                MOVED CLOSER TO IMAGE
             ================================================== */}
 
             <motion.div
@@ -1263,11 +1272,11 @@ export default function Hero() {
               className="
                 absolute
                 right-[2%]
-                bottom-[18%]
+                bottom-[27%]
                 z-30
 
                 min-[375px]:right-[3%]
-                min-[375px]:bottom-[17%]
+                min-[375px]:bottom-[25%]
 
                 sm:right-[0%]
                 sm:bottom-[5%]
