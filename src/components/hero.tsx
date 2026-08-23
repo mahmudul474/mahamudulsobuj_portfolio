@@ -37,6 +37,19 @@ const socials = [
   },
 ];
 
+const entrance = {
+  hidden: {
+    opacity: 0,
+    y: 24,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+  },
+};
+
 export default function Hero() {
   const reduceMotion = useReducedMotion();
 
@@ -57,87 +70,122 @@ export default function Hero() {
       ====================================================== */}
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Emerald ambient glow */}
+        {/* Emerald Glow */}
 
         <motion.div
           className="
             absolute
-            left-[25%]
-            top-[18%]
-            h-[420px]
-            w-[420px]
+            -left-[20%]
+            top-[5%]
+            h-[520px]
+            w-[520px]
             rounded-full
-            bg-emerald-500/[0.07]
-            blur-[130px]
+            bg-emerald-500/[0.075]
+            blur-[150px]
           "
           animate={
             reduceMotion
               ? undefined
               : {
-                  x: [0, 35, -20, 0],
-                  y: [0, -25, 20, 0],
-                  scale: [1, 1.08, 0.96, 1],
+                  x: [0, 160, 60, 0],
+                  y: [0, 80, -50, 0],
+                  scale: [1, 1.25, 0.92, 1],
                 }
           }
           transition={{
-            duration: 13,
+            duration: 18,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         />
 
-        {/* Violet glow */}
+        {/* Violet Glow */}
 
         <motion.div
           className="
             absolute
-            right-[4%]
-            top-[8%]
-            h-[400px]
-            w-[400px]
+            right-[-15%]
+            top-[5%]
+            h-[500px]
+            w-[500px]
             rounded-full
             bg-violet-600/[0.07]
-            blur-[140px]
+            blur-[150px]
           "
           animate={
             reduceMotion
               ? undefined
               : {
-                  x: [0, -30, 20, 0],
-                  y: [0, 25, -20, 0],
-                  scale: [1, 0.92, 1.08, 1],
+                  x: [0, -130, -40, 0],
+                  y: [0, 90, -30, 0],
+                  scale: [1, 0.9, 1.2, 1],
                 }
           }
           transition={{
-            duration: 15,
+            duration: 20,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         />
 
-        {/* Cyan glow */}
+        {/* Cyan Glow */}
 
         <motion.div
           className="
             absolute
-            bottom-[-180px]
-            left-[45%]
-            h-[420px]
-            w-[420px]
+            bottom-[-220px]
+            left-[25%]
+            h-[520px]
+            w-[520px]
             rounded-full
-            bg-cyan-500/[0.06]
-            blur-[140px]
+            bg-cyan-500/[0.055]
+            blur-[160px]
           "
           animate={
             reduceMotion
               ? undefined
               : {
-                  x: [0, 40, -20, 0],
-                  scale: [1, 1.1, 0.95, 1],
+                  x: [0, 130, -80, 0],
+                  y: [0, -80, -20, 0],
+                  scale: [1, 1.15, 0.9, 1],
                 }
           }
           transition={{
-            duration: 12,
+            duration: 17,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Central Glow */}
+
+        <motion.div
+          className="
+            absolute
+            left-1/2
+            top-1/2
+            h-[360px]
+            w-[360px]
+            -translate-x-1/2
+            -translate-y-1/2
+            rounded-full
+            bg-gradient-to-r
+            from-emerald-500/[0.04]
+            via-cyan-500/[0.035]
+            to-violet-500/[0.04]
+            blur-[100px]
+          "
+          animate={
+            reduceMotion
+              ? undefined
+              : {
+                  scale: [1, 1.18, 0.95, 1],
+                  rotate: [0, 120, 240, 360],
+                  opacity: [0.5, 0.9, 0.55, 0.5],
+                }
+          }
+          transition={{
+            duration: 22,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -149,26 +197,38 @@ export default function Hero() {
           className="
             absolute
             inset-0
-            opacity-[0.035]
-            [background-image:linear-gradient(rgba(255,255,255,.5)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.5)_1px,transparent_1px)]
-            [background-size:80px_80px]
-            [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_78%)]
+            opacity-[0.028]
+            [background-image:linear-gradient(rgba(255,255,255,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.55)_1px,transparent_1px)]
+            [background-size:70px_70px]
+            [mask-image:radial-gradient(ellipse_at_center,black_15%,transparent_80%)]
           "
         />
 
         {/* Vignette */}
 
-        <div
+        <motion.div
           className="
             absolute
             inset-0
-            bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,.48)_100%)]
+            bg-[radial-gradient(circle_at_center,transparent_12%,rgba(0,0,0,.55)_100%)]
           "
+          animate={
+            reduceMotion
+              ? undefined
+              : {
+                  opacity: [0.7, 0.85, 0.7],
+                }
+          }
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
         />
       </div>
 
       {/* =====================================================
-          MAIN CONTAINER
+          MAIN CONTENT
       ====================================================== */}
 
       <div
@@ -183,110 +243,97 @@ export default function Hero() {
           flex-col
           px-5
           pb-10
-          pt-[125px]
+          pt-[100px]
 
           sm:px-8
-          sm:pt-[140px]
+          sm:pt-[130px]
 
           lg:px-12
           lg:pb-12
-          lg:pt-[145px]
+          lg:pt-[110px]
 
           xl:px-16
         "
       >
-        {/* ===================================================
-            MAIN 60 / 40 GRID
-        ==================================================== */}
-
         <div
           className="
             grid
             flex-1
             items-center
-            gap-12
+            gap-4
+
+            sm:gap-4
 
             lg:grid-cols-[3fr_2fr]
             lg:gap-8
 
-            xl:gap-14
+            xl:gap-12
           "
         >
           {/* =================================================
-              LEFT — 60%
+              LEFT COLUMN
           ================================================== */}
 
           <div className="relative z-20">
             {/* Eyebrow */}
 
             <motion.p
-              initial={
-                reduceMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      y: 18,
-                      filter: "blur(6px)",
-                    }
-              }
-              animate={{
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
-              }}
+              variants={entrance}
+              initial="hidden"
+              animate="visible"
               transition={{
                 duration: reduceMotion ? 0 : 0.7,
-                delay: 0.2,
-                ease: [0.22, 1, 0.36, 1],
+                delay: 0.15,
               }}
               className="
-                mb-5
-                text-[11px]
+                mb-4
+                text-[10px]
                 font-medium
                 uppercase
                 tracking-[0.18em]
                 text-emerald-300/70
+
+                sm:text-[11px]
               "
             >
               Shopify Specialist · Developer · CRO
             </motion.p>
 
-            {/* Main heading */}
+            {/* =================================================
+                MAIN TITLE
+            ================================================== */}
 
             <motion.h1
-              initial={
-                reduceMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      y: 35,
-                      filter: "blur(10px)",
-                    }
-              }
-              animate={{
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
-              }}
+              variants={entrance}
+              initial="hidden"
+              animate="visible"
               transition={{
                 duration: reduceMotion ? 0 : 1,
-                delay: 0.28,
+                delay: 0.2,
                 ease: [0.22, 1, 0.36, 1],
               }}
               className="
-                max-w-[850px]
+                max-w-[700px]
                 font-display
-                text-[clamp(43px,6vw,86px)]
+                text-[38px]
                 font-semibold
-                leading-[0.95]
-                tracking-[-0.065em]
+                leading-[0.98]
+                tracking-[-0.055em]
+
+                min-[375px]:text-[41px]
+
+                sm:text-[50px]
+
+                md:text-[56px]
+
+                lg:text-[60px]
+
+                xl:text-[66px]
               "
             >
-              I build
-
+              I build{" "}
               <span
                 className="
-                  mx-2
                   bg-gradient-to-r
                   from-emerald-300
                   via-cyan-300
@@ -296,16 +343,11 @@ export default function Hero() {
                 "
               >
                 Shopify
-              </span>
-
+              </span>{" "}
               stores
-
               <br />
-
               that look better,
-
               <br />
-
               <span className="text-white/35">
                 convert better.
               </span>
@@ -314,61 +356,41 @@ export default function Hero() {
             {/* Description */}
 
             <motion.p
-              initial={
-                reduceMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      y: 20,
-                    }
-              }
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+              variants={entrance}
+              initial="hidden"
+              animate="visible"
               transition={{
-                duration: reduceMotion ? 0 : 0.75,
-                delay: 0.48,
-                ease: [0.22, 1, 0.36, 1],
+                duration: reduceMotion ? 0 : 0.7,
+                delay: 0.43,
               }}
               className="
-                mt-7
-                max-w-[650px]
-                text-[15px]
-                leading-7
+                mt-6
+                max-w-[620px]
+                text-[14px]
+                leading-6
                 text-white/45
 
-                sm:text-[16px]
+                sm:mt-7
+                sm:text-[15px]
+                sm:leading-7
               "
             >
-              I design and develop premium Shopify
-              experiences focused on performance,
-              user experience and conversion — from
-              custom storefronts to advanced theme
-              development and CRO.
+              I design and develop premium Shopify experiences
+              focused on performance, user experience and
+              conversion — from custom storefronts to advanced
+              theme development and CRO.
             </motion.p>
 
-            {/* =================================================
-                CLIENT PROOF
-            ================================================== */}
+            {/* Client Proof */}
 
             <motion.a
               href="#testimonials"
-              initial={
-                reduceMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      y: 20,
-                    }
-              }
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+              variants={entrance}
+              initial="hidden"
+              animate="visible"
               transition={{
-                duration: reduceMotion ? 0 : 0.75,
-                delay: 0.62,
+                duration: reduceMotion ? 0 : 0.7,
+                delay: 0.57,
               }}
               whileHover={
                 reduceMotion
@@ -379,19 +401,19 @@ export default function Hero() {
               }
               className="
                 group
-                mt-8
+                mt-7
                 flex
                 w-fit
+                max-w-full
                 items-center
-                gap-4
-                outline-none
+                gap-3
               "
             >
               <div
                 className="
-                  relative
-                  h-[48px]
-                  w-[175px]
+                  h-[44px]
+                  w-[150px]
+                  shrink-0
                   overflow-hidden
                   rounded-xl
                   border
@@ -402,6 +424,9 @@ export default function Hero() {
                   duration-300
                   group-hover:border-white/20
                   group-hover:bg-white/[0.06]
+
+                  sm:h-[48px]
+                  sm:w-[175px]
                 "
               >
                 <img
@@ -419,13 +444,15 @@ export default function Hero() {
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <p
                   className="
-                    text-[10px]
+                    text-[9px]
                     uppercase
-                    tracking-[0.13em]
+                    tracking-[0.12em]
                     text-white/25
+
+                    sm:text-[10px]
                   "
                 >
                   Trusted by
@@ -433,10 +460,12 @@ export default function Hero() {
 
                 <p
                   className="
-                    mt-1
-                    text-xs
+                    mt-0.5
+                    text-[11px]
                     font-medium
                     text-white/55
+
+                    sm:text-xs
                   "
                 >
                   Clients worldwide ↗
@@ -444,36 +473,23 @@ export default function Hero() {
               </div>
             </motion.a>
 
-            {/* =================================================
-                CTA
-            ================================================== */}
+            {/* CTA */}
 
             <motion.div
-              initial={
-                reduceMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      y: 18,
-                    }
-              }
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+              variants={entrance}
+              initial="hidden"
+              animate="visible"
               transition={{
                 duration: reduceMotion ? 0 : 0.7,
-                delay: 0.75,
+                delay: 0.7,
               }}
               className="
-                mt-7
+                mt-6
                 flex
                 flex-wrap
                 gap-2.5
               "
             >
-              {/* Primary */}
-
               <motion.a
                 href="#contact"
                 whileHover={
@@ -492,29 +508,26 @@ export default function Hero() {
                 }
                 className="
                   inline-flex
-                  h-11
+                  h-10
                   items-center
                   gap-2
-                  rounded-[14px]
+                  rounded-[13px]
                   bg-white
                   px-4
-                  text-[12px]
+                  text-[11px]
                   font-semibold
                   text-black
                   transition-colors
                   duration-300
                   hover:bg-emerald-300
+
+                  sm:h-11
+                  sm:text-[12px]
                 "
               >
                 Let's Talk
-
-                <ArrowUpRight
-                  size={15}
-                  strokeWidth={2}
-                />
+                <ArrowUpRight size={14} />
               </motion.a>
-
-              {/* Secondary */}
 
               <motion.a
                 href="#work"
@@ -534,15 +547,15 @@ export default function Hero() {
                 }
                 className="
                   inline-flex
-                  h-11
+                  h-10
                   items-center
                   gap-2
-                  rounded-[14px]
+                  rounded-[13px]
                   border
                   border-white/10
                   bg-white/[0.035]
                   px-4
-                  text-[12px]
+                  text-[11px]
                   font-medium
                   text-white/75
                   backdrop-blur-xl
@@ -551,50 +564,41 @@ export default function Hero() {
                   hover:border-white/20
                   hover:bg-white/[0.07]
                   hover:text-white
+
+                  sm:h-11
+                  sm:text-[12px]
                 "
               >
                 <Play
-                  size={12}
+                  size={11}
                   fill="currentColor"
                 />
-
                 View My Work
               </motion.a>
             </motion.div>
 
-            {/* =================================================
-                SOCIALS
-            ================================================== */}
+            {/* Social */}
 
             <motion.div
-              initial={
-                reduceMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      y: 15,
-                    }
-              }
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+              variants={entrance}
+              initial="hidden"
+              animate="visible"
               transition={{
                 duration: reduceMotion ? 0 : 0.7,
-                delay: 0.88,
+                delay: 0.82,
               }}
               className="
-                mt-7
+                mt-6
                 flex
                 flex-wrap
                 items-center
-                gap-2
+                gap-1.5
               "
             >
               <span
                 className="
                   mr-1
-                  text-[10px]
+                  text-[9px]
                   uppercase
                   tracking-[0.14em]
                   text-white/25
@@ -616,8 +620,8 @@ export default function Hero() {
                       reduceMotion
                         ? undefined
                         : {
-                            y: -4,
-                            scale: 1.04,
+                            y: -3,
+                            scale: 1.05,
                           }
                     }
                     whileTap={
@@ -633,7 +637,7 @@ export default function Hero() {
                       min-w-8
                       items-center
                       justify-center
-                      rounded-[10px]
+                      rounded-[9px]
                       border
                       border-white/10
                       bg-white/[0.025]
@@ -647,12 +651,12 @@ export default function Hero() {
                       hover:bg-white/[0.07]
                       hover:text-white
                     "
-                    aria-label={social.name}
                     title={social.name}
+                    aria-label={social.name}
                   >
                     {Icon ? (
                       <Icon
-                        size={14}
+                        size={13}
                         strokeWidth={1.6}
                       />
                     ) : (
@@ -665,8 +669,7 @@ export default function Hero() {
           </div>
 
           {/* =================================================
-              RIGHT — 40%
-              EVERYTHING HERE IS ANIMATED
+              RIGHT COLUMN
           ================================================== */}
 
           <div
@@ -674,36 +677,45 @@ export default function Hero() {
               relative
               mx-auto
               flex
-              min-h-[520px]
+              min-h-[510px]
               w-full
               max-w-[500px]
-              items-center
+              items-start
               justify-center
 
-              sm:min-h-[570px]
+              min-[375px]:min-h-[540px]
 
-              lg:min-h-[620px]
+              sm:min-h-[580px]
+
+              lg:min-h-[660px]
+
+              xl:min-h-[710px]
             "
           >
-            {/* =================================================
-                OUTER ROTATING ORBIT
-            ================================================== */}
+            {/* ORBIT 1 */}
 
             <motion.div
               className="
                 absolute
-                h-[300px]
-                w-[300px]
+                h-[255px]
+                w-[255px]
                 rounded-full
                 border
                 border-emerald-400/15
 
-                sm:h-[390px]
-                sm:w-[390px]
+                min-[375px]:h-[285px]
+                min-[375px]:w-[285px]
 
-                lg:h-[470px]
-                lg:w-[470px]
+                sm:h-[370px]
+                sm:w-[370px]
+
+                lg:h-[450px]
+                lg:w-[450px]
+
+                xl:h-[520px]
+                xl:w-[520px]
               "
+              style={{ y: 40 }}
               animate={
                 reduceMotion
                   ? undefined
@@ -717,43 +729,46 @@ export default function Hero() {
                 ease: "linear",
               }}
             >
-              {/* Orbit dot */}
-
               <motion.span
                 className="
                   absolute
                   left-1/2
                   top-0
-                  h-2
-                  w-2
+                  h-1.5
+                  w-1.5
                   -translate-x-1/2
                   rounded-full
                   bg-emerald-300
-                  shadow-[0_0_18px_rgba(110,231,183,.9)]
+                  shadow-[0_0_16px_rgba(110,231,183,.9)]
                 "
               />
             </motion.div>
 
-            {/* =================================================
-                SECOND ORBIT
-            ================================================== */}
+            {/* ORBIT 2 */}
 
             <motion.div
               className="
                 absolute
-                h-[250px]
-                w-[390px]
+                h-[205px]
+                w-[300px]
                 rotate-[25deg]
                 rounded-[50%]
                 border
-                border-cyan-400/15
+                border-cyan-400/12
 
-                sm:h-[300px]
-                sm:w-[470px]
+                min-[375px]:h-[225px]
+                min-[375px]:w-[340px]
 
-                lg:h-[360px]
-                lg:w-[570px]
+                sm:h-[290px]
+                sm:w-[450px]
+
+                lg:h-[350px]
+                lg:w-[540px]
+
+                xl:h-[390px]
+                xl:w-[590px]
               "
+              style={{ y: 40 }}
               animate={
                 reduceMotion
                   ? undefined
@@ -768,26 +783,31 @@ export default function Hero() {
               }}
             />
 
-            {/* =================================================
-                THIRD ORBIT
-            ================================================== */}
+            {/* ORBIT 3 */}
 
             <motion.div
               className="
                 absolute
-                h-[220px]
-                w-[350px]
+                h-[180px]
+                w-[270px]
                 -rotate-[38deg]
                 rounded-[50%]
                 border
                 border-violet-400/10
 
-                sm:h-[270px]
-                sm:w-[430px]
+                min-[375px]:h-[200px]
+                min-[375px]:w-[300px]
 
-                lg:h-[320px]
-                lg:w-[520px]
+                sm:h-[250px]
+                sm:w-[390px]
+
+                lg:h-[310px]
+                lg:w-[500px]
+
+                xl:h-[340px]
+                xl:w-[550px]
               "
+              style={{ y: 40 }}
               animate={
                 reduceMotion
                   ? undefined
@@ -802,34 +822,36 @@ export default function Hero() {
               }}
             />
 
-            {/* =================================================
-                CENTRAL ANIMATED GLOW
-            ================================================== */}
+            {/* CENTRAL GLOW */}
 
             <motion.div
               className="
                 absolute
-                h-[300px]
-                w-[300px]
+                h-[220px]
+                w-[220px]
                 rounded-full
                 bg-gradient-to-br
                 from-emerald-400/15
                 via-cyan-400/10
                 to-violet-500/15
-                blur-[80px]
+                blur-[65px]
 
-                sm:h-[360px]
-                sm:w-[360px]
+                sm:h-[330px]
+                sm:w-[330px]
 
-                lg:h-[430px]
-                lg:w-[430px]
+                lg:h-[410px]
+                lg:w-[410px]
+
+                xl:h-[470px]
+                xl:w-[470px]
               "
+              style={{ y: 40 }}
               animate={
                 reduceMotion
                   ? undefined
                   : {
-                      scale: [1, 1.12, 1],
-                      opacity: [0.55, 0.9, 0.55],
+                      scale: [1, 1.12, 0.96, 1],
+                      opacity: [0.45, 0.85, 0.5, 0.45],
                     }
               }
               transition={{
@@ -839,35 +861,30 @@ export default function Hero() {
               }}
             />
 
-            {/* =================================================
-                ANIMATED SHOPIFY BADGE
-            ================================================== */}
+            {/* SHOPIFY BADGE — DESKTOP ONLY */}
 
             <motion.div
-              initial={
-                reduceMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      scale: 0.5,
-                      y: -20,
-                    }
-              }
+              initial={{
+                opacity: 0,
+                scale: 0.7,
+              }}
               animate={{
                 opacity: 1,
                 scale: 1,
-                y: 0,
               }}
               transition={{
-                duration: reduceMotion ? 0 : 0.9,
-                delay: 0.65,
-                ease: [0.22, 1, 0.36, 1],
+                duration: reduceMotion ? 0 : 0.8,
+                delay: 0.5,
               }}
               className="
                 absolute
-                right-[4%]
+                right-[2%]
                 top-[4%]
                 z-40
+                hidden
+
+                sm:block
+                sm:right-[3%]
               "
             >
               <motion.div
@@ -875,7 +892,7 @@ export default function Hero() {
                   reduceMotion
                     ? undefined
                     : {
-                        y: [0, -8, 0],
+                        y: [0, -7, 0],
                         rotate: [0, 2, -2, 0],
                       }
                 }
@@ -885,10 +902,9 @@ export default function Hero() {
                   ease: "easeInOut",
                 }}
                 className="
-                  relative
                   flex
                   items-center
-                  gap-3
+                  gap-2
                   rounded-2xl
                   border
                   border-[#95BF47]/20
@@ -899,103 +915,26 @@ export default function Hero() {
                   backdrop-blur-2xl
                 "
               >
-                {/* Shopify icon */}
+                <span className="text-xs font-semibold text-[#95BF47]">
+                  Shopify
+                </span>
 
-                <motion.div
-                  animate={
-                    reduceMotion
-                      ? undefined
-                      : {
-                          rotate: [0, 360],
-                        }
-                  }
-                  transition={{
-                    duration: 18,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                  className="
-                    flex
-                    h-9
-                    w-9
-                    items-center
-                    justify-center
-                    rounded-xl
-                    bg-[#95BF47]/10
-                    text-sm
-                    font-black
-                    text-[#a8d05c]
-                    shadow-[0_0_25px_rgba(149,191,71,.12)]
-                  "
-                >
-                  S
-                </motion.div>
-
-                <div>
-                  <p
-                    className="
-                      text-[10px]
-                      font-semibold
-                      text-white
-                    "
-                  >
-                    Shopify
-                  </p>
-
-                  <p
-                    className="
-                      mt-0.5
-                      text-[9px]
-                      text-white/35
-                    "
-                  >
-                    Specialist
-                  </p>
-                </div>
-
-                {/* tiny animated dot */}
-
-                <motion.span
-                  animate={
-                    reduceMotion
-                      ? undefined
-                      : {
-                          opacity: [0.3, 1, 0.3],
-                          scale: [0.8, 1.2, 0.8],
-                        }
-                  }
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                  }}
-                  className="
-                    absolute
-                    -right-1
-                    -top-1
-                    h-2
-                    w-2
-                    rounded-full
-                    bg-[#95BF47]
-                    shadow-[0_0_12px_rgba(149,191,71,.9)]
-                  "
-                />
+                <span className="text-[10px] text-white/40">
+                  Expert
+                </span>
               </motion.div>
             </motion.div>
 
             {/* =================================================
-                PERSONAL PHOTO
+                MAHAMUDUL IMAGE
             ================================================== */}
 
             <motion.div
-              initial={
-                reduceMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      scale: 0.82,
-                      y: 40,
-                    }
-              }
+              initial={{
+                opacity: 0,
+                scale: 0.88,
+                y: 35,
+              }}
               animate={{
                 opacity: 1,
                 scale: 1,
@@ -1003,62 +942,73 @@ export default function Hero() {
               }}
               transition={{
                 duration: reduceMotion ? 0 : 1.1,
-                delay: 0.4,
+                delay: 0.32,
                 ease: [0.22, 1, 0.36, 1],
               }}
               className="
                 relative
                 z-10
-                h-[460px]
-                w-[315px]
+                h-[420px]
+                w-[290px]
 
-                sm:h-[530px]
-                sm:w-[370px]
+                min-[375px]:h-[450px]
+                min-[375px]:w-[310px]
 
-                lg:h-[590px]
-                lg:w-[400px]
+                sm:h-[540px]
+                sm:w-[380px]
+
+                md:h-[590px]
+                md:w-[420px]
+
+                lg:h-[660px]
+                lg:w-[470px]
+
+                xl:h-[710px]
+                xl:w-[500px]
               "
             >
-              {/* Photo glow */}
+              {/* Image Glow */}
 
               <motion.div
                 className="
                   absolute
-                  inset-x-[15%]
-                  bottom-[5%]
-                  top-[15%]
+                  left-1/2
+                  top-[18%]
+                  h-[65%]
+                  w-[72%]
+                  -translate-x-1/2
                   rounded-full
                   bg-gradient-to-b
-                  from-emerald-400/15
+                  from-emerald-400/18
                   via-cyan-400/10
-                  to-violet-500/15
-                  blur-[65px]
+                  to-violet-500/12
+                  blur-[70px]
                 "
                 animate={
                   reduceMotion
                     ? undefined
                     : {
-                        opacity: [0.55, 0.9, 0.55],
+                        opacity: [0.4, 0.75, 0.4],
                         scale: [1, 1.06, 1],
                       }
                 }
                 transition={{
-                  duration: 5,
+                  duration: 5.5,
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
               />
 
-              {/* Floating image */}
+              {/* MAHAMUDUL HERO IMAGE */}
 
               <motion.img
-                src="/images/profile.webp"
+                src="/images/mahamudulhero.png"
                 alt="Mahamudul Hasan - Shopify Specialist"
                 animate={
                   reduceMotion
                     ? undefined
                     : {
-                        y: [0, -9, 0],
+                        y: [0, -7, 0],
                       }
                 }
                 transition={{
@@ -1068,47 +1018,108 @@ export default function Hero() {
                 }}
                 className="
                   relative
+                  -top-[110px]
                   z-10
                   h-full
                   w-full
                   object-contain
                   object-bottom
-                  drop-shadow-[0_35px_70px_rgba(0,0,0,.7)]
+                  drop-shadow-[0_35px_75px_rgba(0,0,0,.72)]
+
+                  sm:-top-[125px]
+                  sm:drop-shadow-[0_40px_90px_rgba(0,0,0,.78)]
+                "
+              />
+
+              {/* Bottom Shadow */}
+
+              <motion.div
+                className="
+                  pointer-events-none
+                  absolute
+                  bottom-[1%]
+                  left-1/2
+                  z-20
+                  h-[95px]
+                  w-[92%]
+                  -translate-x-1/2
+                  rounded-[50%]
+                  bg-black/70
+                  blur-[28px]
+
+                  sm:h-[105px]
+                  sm:w-[94%]
+
+                  md:h-[115px]
+
+                  lg:h-[125px]
+                "
+                animate={
+                  reduceMotion
+                    ? undefined
+                    : {
+                        opacity: [0.55, 0.75, 0.55],
+                        scaleX: [0.94, 1, 0.94],
+                      }
+                }
+                transition={{
+                  duration: 4.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+
+              {/* Floor Light */}
+
+              <div
+                className="
+                  pointer-events-none
+                  absolute
+                  bottom-[2%]
+                  left-1/2
+                  z-[5]
+                  h-[45px]
+                  w-[78%]
+                  -translate-x-1/2
+                  rounded-full
+                  bg-white/[0.035]
+                  blur-[22px]
+
+                  lg:h-[55px]
                 "
               />
             </motion.div>
 
             {/* =================================================
-                GLASS CARD — 3+ YEARS
+                CARD 1 — EXPERIENCE
             ================================================== */}
 
             <motion.div
-              initial={
-                reduceMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      x: 35,
-                      y: -15,
-                      scale: 0.85,
-                    }
-              }
+              initial={{
+                opacity: 0,
+                x: 20,
+                scale: 0.8,
+              }}
               animate={{
                 opacity: 1,
                 x: 0,
-                y: 0,
                 scale: 1,
               }}
               transition={{
-                duration: reduceMotion ? 0 : 0.85,
-                delay: 0.85,
-                ease: [0.22, 1, 0.36, 1],
+                duration: reduceMotion ? 0 : 0.8,
+                delay: 0.75,
               }}
               className="
                 absolute
-                right-[-1%]
-                top-[15%]
+                right-[2%]
+                top-[10%]
                 z-30
+
+                min-[375px]:right-[3%]
+                min-[375px]:top-[11%]
+
+                sm:right-[1%]
+                sm:top-[16%]
               "
             >
               <motion.div
@@ -1117,7 +1128,7 @@ export default function Hero() {
                     ? undefined
                     : {
                         y: [0, -7, 0],
-                        rotate: [0, 0.8, 0],
+                        rotate: [0, 0.7, 0],
                       }
                 }
                 transition={{
@@ -1128,99 +1139,62 @@ export default function Hero() {
                 className="
                   relative
                   overflow-hidden
-                  rounded-2xl
+                  rounded-xl
                   border
                   border-white/10
                   bg-white/[0.055]
-                  px-5
-                  py-4
-                  shadow-[0_25px_70px_rgba(0,0,0,.4)]
+                  px-3
+                  py-2.5
+                  shadow-[0_20px_60px_rgba(0,0,0,.4)]
                   backdrop-blur-2xl
+
+                  min-[375px]:px-3.5
+
+                  sm:rounded-2xl
+                  sm:px-5
+                  sm:py-4
                 "
               >
-                {/* animated glow */}
+                <p className="font-display text-2xl font-semibold sm:text-3xl">
+                  3+
+                </p>
 
-                <motion.div
-                  className="
-                    absolute
-                    -right-8
-                    -top-8
-                    h-20
-                    w-20
-                    rounded-full
-                    bg-emerald-400/10
-                    blur-2xl
-                  "
-                  animate={
-                    reduceMotion
-                      ? undefined
-                      : {
-                          scale: [1, 1.4, 1],
-                          opacity: [0.4, 0.8, 0.4],
-                        }
-                  }
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                  }}
-                />
-
-                <div className="relative">
-                  <p
-                    className="
-                      font-display
-                      text-3xl
-                      font-semibold
-                      tracking-[-0.04em]
-                    "
-                  >
-                    3+
-                  </p>
-
-                  <p
-                    className="
-                      mt-1
-                      text-[10px]
-                      text-white/40
-                    "
-                  >
-                    Years Experience
-                  </p>
-                </div>
+                <p className="mt-0.5 max-w-[90px] text-[8px] leading-4 text-white/40 sm:max-w-none sm:text-[10px]">
+                  Years Experience
+                </p>
               </motion.div>
             </motion.div>
 
             {/* =================================================
-                GLASS CARD — 70+ PROJECTS
+                CARD 2 — PROJECTS
             ================================================== */}
 
             <motion.div
-              initial={
-                reduceMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      x: -35,
-                      y: 15,
-                      scale: 0.85,
-                    }
-              }
+              initial={{
+                opacity: 0,
+                x: -20,
+                scale: 0.8,
+              }}
               animate={{
                 opacity: 1,
                 x: 0,
-                y: 0,
                 scale: 1,
               }}
               transition={{
-                duration: reduceMotion ? 0 : 0.85,
-                delay: 1,
-                ease: [0.22, 1, 0.36, 1],
+                duration: reduceMotion ? 0 : 0.8,
+                delay: 0.9,
               }}
               className="
                 absolute
-                bottom-[19%]
-                left-[-2%]
+                left-[2%]
+                bottom-[14%]
                 z-30
+
+                min-[375px]:left-[3%]
+                min-[375px]:bottom-[14%]
+
+                sm:left-[0%]
+                sm:bottom-[17%]
               "
             >
               <motion.div
@@ -1229,7 +1203,7 @@ export default function Hero() {
                     ? undefined
                     : {
                         y: [0, 7, 0],
-                        rotate: [0, -0.8, 0],
+                        rotate: [0, -0.7, 0],
                       }
                 }
                 transition={{
@@ -1240,100 +1214,63 @@ export default function Hero() {
                 className="
                   relative
                   overflow-hidden
-                  rounded-2xl
+                  rounded-xl
                   border
                   border-white/10
                   bg-white/[0.055]
-                  px-5
-                  py-4
-                  shadow-[0_25px_70px_rgba(0,0,0,.4)]
+                  px-3
+                  py-2.5
+                  shadow-[0_20px_60px_rgba(0,0,0,.4)]
                   backdrop-blur-2xl
+
+                  min-[375px]:px-3.5
+
+                  sm:rounded-2xl
+                  sm:px-5
+                  sm:py-4
                 "
               >
-                <motion.div
-                  className="
-                    absolute
-                    -bottom-8
-                    -left-8
-                    h-20
-                    w-20
-                    rounded-full
-                    bg-cyan-400/10
-                    blur-2xl
-                  "
-                  animate={
-                    reduceMotion
-                      ? undefined
-                      : {
-                          scale: [1, 1.35, 1],
-                          opacity: [0.4, 0.8, 0.4],
-                        }
-                  }
-                  transition={{
-                    duration: 3.5,
-                    repeat: Infinity,
-                  }}
-                />
+                <p className="font-display text-2xl font-semibold sm:text-3xl">
+                  70+
+                </p>
 
-                <div className="relative">
-                  <p
-                    className="
-                      font-display
-                      text-3xl
-                      font-semibold
-                      tracking-[-0.04em]
-                    "
-                  >
-                    70+
-                  </p>
-
-                  <p
-                    className="
-                      mt-1
-                      text-[10px]
-                      text-white/40
-                    "
-                  >
-                    Projects Completed
-                  </p>
-                </div>
+                <p className="mt-0.5 max-w-[100px] text-[8px] leading-4 text-white/40 sm:max-w-none sm:text-[10px]">
+                  Projects Completed
+                </p>
               </motion.div>
             </motion.div>
 
             {/* =================================================
-                GLASS CARD — CRO
+                CARD 3 — CRO
+                MOBILE MOVED UP
             ================================================== */}
 
             <motion.div
-              initial={
-                reduceMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      x: 25,
-                      y: 20,
-                      scale: 0.8,
-                    }
-              }
+              initial={{
+                opacity: 0,
+                x: 18,
+                scale: 0.8,
+              }}
               animate={{
                 opacity: 1,
                 x: 0,
-                y: 0,
                 scale: 1,
               }}
               transition={{
                 duration: reduceMotion ? 0 : 0.8,
-                delay: 1.15,
-                ease: [0.22, 1, 0.36, 1],
+                delay: 1.05,
               }}
               className="
                 absolute
-                bottom-[7%]
-                right-[-1%]
+                right-[2%]
+                bottom-[18%]
                 z-30
-                hidden
 
-                sm:block
+                min-[375px]:right-[3%]
+                min-[375px]:bottom-[17%]
+
+                sm:right-[0%]
+                sm:bottom-[5%]
               "
             >
               <motion.div
@@ -1355,43 +1292,41 @@ export default function Hero() {
                   border
                   border-white/10
                   bg-white/[0.045]
-                  px-4
-                  py-3
-                  shadow-[0_20px_55px_rgba(0,0,0,.35)]
+                  px-2.5
+                  py-2
+                  shadow-[0_18px_50px_rgba(0,0,0,.35)]
                   backdrop-blur-2xl
+
+                  min-[375px]:px-3
+
+                  sm:px-4
+                  sm:py-3
                 "
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2">
                   <motion.span
                     animate={
                       reduceMotion
                         ? undefined
                         : {
-                            rotate: [
-                              0,
-                              -8,
-                              8,
-                              0,
-                            ],
+                            rotate: [0, -8, 8, 0],
                           }
                     }
                     transition={{
                       duration: 2.8,
                       repeat: Infinity,
                     }}
-                    className="
-                      text-base
-                    "
+                    className="text-sm sm:text-base"
                   >
                     ⚡
                   </motion.span>
 
                   <div>
-                    <p className="text-[10px] font-semibold">
+                    <p className="text-[8px] font-semibold sm:text-[10px]">
                       CRO Focused
                     </p>
 
-                    <p className="text-[9px] text-white/35">
+                    <p className="text-[7px] text-white/35 sm:text-[9px]">
                       Conversion First
                     </p>
                   </div>
@@ -1400,39 +1335,35 @@ export default function Hero() {
             </motion.div>
 
             {/* =================================================
-                GLASS CARD — PERFORMANCE
+                CARD 4 — PERFORMANCE
             ================================================== */}
 
             <motion.div
-              initial={
-                reduceMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      x: -25,
-                      y: -10,
-                      scale: 0.8,
-                    }
-              }
+              initial={{
+                opacity: 0,
+                x: -18,
+                scale: 0.8,
+              }}
               animate={{
                 opacity: 1,
                 x: 0,
-                y: 0,
                 scale: 1,
               }}
               transition={{
                 duration: reduceMotion ? 0 : 0.8,
-                delay: 1.28,
-                ease: [0.22, 1, 0.36, 1],
+                delay: 1.18,
               }}
               className="
                 absolute
-                left-[0%]
-                top-[29%]
+                left-[2%]
+                top-[23%]
                 z-30
-                hidden
 
-                xl:block
+                min-[375px]:left-[3%]
+                min-[375px]:top-[24%]
+
+                sm:left-[0%]
+                sm:top-[29%]
               "
             >
               <motion.div
@@ -1454,42 +1385,41 @@ export default function Hero() {
                   border
                   border-white/10
                   bg-white/[0.045]
-                  px-4
-                  py-3
-                  shadow-[0_20px_55px_rgba(0,0,0,.35)]
+                  px-2.5
+                  py-2
+                  shadow-[0_18px_50px_rgba(0,0,0,.35)]
                   backdrop-blur-2xl
+
+                  min-[375px]:px-3
+
+                  sm:px-4
+                  sm:py-3
                 "
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2">
                   <motion.span
                     animate={
                       reduceMotion
                         ? undefined
                         : {
-                            scale: [
-                              1,
-                              1.12,
-                              1,
-                            ],
+                            scale: [1, 1.12, 1],
                           }
                     }
                     transition={{
                       duration: 2.5,
                       repeat: Infinity,
                     }}
-                    className="
-                      text-base
-                    "
+                    className="text-sm sm:text-base"
                   >
                     ◉
                   </motion.span>
 
                   <div>
-                    <p className="text-[10px] font-semibold">
+                    <p className="whitespace-nowrap text-[8px] font-semibold sm:text-[10px]">
                       Performance First
                     </p>
 
-                    <p className="text-[9px] text-white/35">
+                    <p className="text-[7px] text-white/35 sm:text-[9px]">
                       Fast & Scalable
                     </p>
                   </div>
