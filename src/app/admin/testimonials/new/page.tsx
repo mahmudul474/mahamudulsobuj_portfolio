@@ -1,1 +1,0 @@
-import {AdminForm} from "@/components/admin-form";export default function Page(){return <div className="p-6 md:p-10"><h1 className="font-display text-4xl font-bold">New Testimonial</h1><AdminForm type="testimonial"/></div>}

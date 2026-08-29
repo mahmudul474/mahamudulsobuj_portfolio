@@ -1,2 +1,0 @@
-import {Header} from "@/components/header";import {AppointmentForm} from "@/components/appointment-form";
-export default function Page(){return <><Header/><main className="mx-auto max-w-3xl px-5 pb-24 pt-40"><p className="text-xs uppercase tracking-[.3em] text-[var(--primary)]">Appointment</p><h1 className="mt-4 font-display text-6xl font-bold">Let's talk.</h1><p className="mt-6 text-zinc-400">Send a consultation request.</p><AppointmentForm/></main></>}
