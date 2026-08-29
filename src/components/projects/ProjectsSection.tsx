@@ -14,7 +14,6 @@ export default function ProjectsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLSpanElement>(null);
-  const ambientRef = useRef<HTMLDivElement>(null);
 
   /*
    * =========================================================
@@ -30,7 +29,7 @@ export default function ProjectsSection() {
 
   /*
    * =========================================================
-   * ANIMATION
+   * PROJECT STACK ANIMATION
    * =========================================================
    */
 
@@ -38,7 +37,7 @@ export default function ProjectsSection() {
     const section = sectionRef.current;
     const stage = stageRef.current;
 
-    if (!section || !stage || !featuredProjects.length) {
+    if (!section || !stage || featuredProjects.length === 0) {
       return;
     }
 
@@ -52,34 +51,6 @@ export default function ProjectsSection() {
 
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
-
-      /*
-       * ------------------------------------------------------
-       * AMBIENT LIGHT
-       *
-       * Very slow and lightweight.
-       * ------------------------------------------------------
-       */
-
-      const ambient = ambientRef.current;
-
-      if (ambient) {
-        gsap.to(ambient, {
-          x: 70,
-          y: -25,
-          scale: 1.08,
-          duration: 14,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        });
-      }
-
-      /*
-       * ------------------------------------------------------
-       * RESPONSIVE
-       * ------------------------------------------------------
-       */
 
       mm.add(
         {
@@ -106,9 +77,9 @@ export default function ProjectsSection() {
           } = conditions;
 
           /*
-           * ---------------------------------------------------
-           * REDUCED MOTION
-           * ---------------------------------------------------
+           * ===================================================
+           * ACCESSIBILITY
+           * ===================================================
            */
 
           if (reducedMotion) {
@@ -120,133 +91,82 @@ export default function ProjectsSection() {
           }
 
           /*
-           * ---------------------------------------------------
-           * STACK VALUES
-           * ---------------------------------------------------
+           * ===================================================
+           * RESPONSIVE VALUES
+           * ===================================================
            */
 
           const stackOffset = desktop
-            ? 15
+            ? 14
             : tablet
-              ? 10
-              : 6;
+              ? 9
+              : 5;
 
           const stackScale = desktop
-            ? 0.017
+            ? 0.014
             : tablet
-              ? 0.014
-              : 0.008;
-
-          /*
-           * ---------------------------------------------------
-           * EXIT VALUES
-           * ---------------------------------------------------
-           */
-
-          const exitY = desktop
-            ? -103
-            : tablet
-              ? -101
-              : -100;
+              ? 0.011
+              : 0.006;
 
           const exitScale = desktop
-            ? 0.96
+            ? 0.97
             : tablet
-              ? 0.968
-              : 0.975;
+              ? 0.975
+              : 0.98;
+
+          const exitY = desktop
+            ? -105
+            : tablet
+              ? -103
+              : -101;
 
           /*
-           * ---------------------------------------------------
-           * INITIAL STATE
-           * ---------------------------------------------------
+           * ===================================================
+           * INITIAL STACK STATE
+           * ===================================================
            */
 
           cards.forEach((card, index) => {
-            const image =
-              card.querySelector<HTMLElement>(
-                ".project-card-image",
-              );
-
-            const content =
-              card.querySelector<HTMLElement>(
-                ".project-card-content",
-              );
-
-            const title =
-              card.querySelector<HTMLElement>(
-                ".project-card-title",
-              );
-
-            /*
-             * Only transform / opacity / filter.
-             *
-             * No heavy shadows or complex animation here.
-             */
-
             gsap.set(card, {
               y: index * stackOffset,
-              scale: 1 - index * stackScale,
+
+              scale:
+                1 - index * stackScale,
 
               opacity:
                 index === 0
                   ? 1
-                  : 0.97,
-
-              filter:
-                index === 0
-                  ? "blur(0px)"
-                  : "blur(2.5px)",
+                  : 0.95,
 
               zIndex:
                 cards.length - index,
 
               force3D: true,
+
+              willChange:
+                "transform, opacity",
+
+              backfaceVisibility:
+                "hidden",
             });
-
-            /*
-             * Image.
-             */
-
-            if (image) {
-              gsap.set(image, {
-                scale: 1.035,
-                yPercent: 0,
-                force3D: true,
-              });
-            }
-
-            /*
-             * Background card content is slightly hidden.
-             */
-
-            if (index > 0) {
-              if (content) {
-                gsap.set(content, {
-                  opacity: 0.45,
-                  y: 6,
-                });
-              }
-
-              if (title) {
-                gsap.set(title, {
-                  opacity: 0.55,
-                  y: 5,
-                });
-              }
-            }
           });
 
           /*
-           * ---------------------------------------------------
+           * ===================================================
            * MAIN TIMELINE
+           * ===================================================
            *
            * IMPORTANT:
            *
-           * scrub is intentionally LOW.
+           * The animation DOES NOT start while the section
+           * is still below the viewport.
            *
-           * High scrub values make mouse-wheel scrolling
-           * feel delayed / heavy.
-           * ---------------------------------------------------
+           * Section reaches the top first.
+           *
+           * Then it pins.
+           *
+           * Then cards begin moving.
+           * ===================================================
            */
 
           const timeline = gsap.timeline({
@@ -257,25 +177,46 @@ export default function ProjectsSection() {
             scrollTrigger: {
               trigger: stage,
 
+              /*
+               * FIX:
+               *
+               * Do NOT use top 70%.
+               *
+               * Wait until the actual section reaches
+               * the viewport top.
+               */
+
               start: "top top",
+
+              /*
+               * Long enough scroll distance for six cards.
+               */
 
               end: `+=${cards.length * (
                 desktop
-                  ? 74
+                  ? 85
                   : tablet
-                    ? 68
-                    : 58
+                    ? 78
+                    : 72
               )}%`,
 
+              /*
+               * Pin the project stage while cards change.
+               */
+
               pin: true,
+
+              pinSpacing: true,
 
               /*
                * Smooth but responsive.
                */
 
               scrub: desktop
-                ? 0.35
-                : 0.28,
+                ? 0.12
+                : mobile
+                  ? 0.07
+                  : 0.1,
 
               anticipatePin: 1,
 
@@ -283,7 +224,9 @@ export default function ProjectsSection() {
 
               fastScrollEnd: false,
 
-              preventOverlaps: true,
+              /*
+               * Update project counter.
+               */
 
               onUpdate: (self) => {
                 if (!progressRef.current) {
@@ -312,71 +255,38 @@ export default function ProjectsSection() {
           });
 
           /*
-           * ---------------------------------------------------
+           * ===================================================
            * CARD TRANSITIONS
-           * ---------------------------------------------------
+           * ===================================================
            */
 
           cards.forEach((card, index) => {
-            if (index === cards.length - 1) {
+            if (index >= cards.length - 1) {
               return;
             }
 
             const nextCard = cards[index + 1];
 
-            const currentImage =
-              card.querySelector<HTMLElement>(
-                ".project-card-image",
-              );
-
-            const nextImage =
-              nextCard.querySelector<HTMLElement>(
-                ".project-card-image",
-              );
-
-            const currentContent =
-              card.querySelector<HTMLElement>(
-                ".project-card-content",
-              );
-
-            const nextContent =
-              nextCard.querySelector<HTMLElement>(
-                ".project-card-content",
-              );
-
-            const currentTitle =
-              card.querySelector<HTMLElement>(
-                ".project-card-title",
-              );
-
-            const nextTitle =
-              nextCard.querySelector<HTMLElement>(
-                ".project-card-title",
-              );
-
             /*
              * =================================================
              * CURRENT CARD
+             * =================================================
              *
              * Smooth upward movement.
              *
-             * NO heavy blur.
-             * =================================================
+             * No blur.
+             * No rotation.
+             * No filter.
              */
 
             timeline.to(
               card,
               {
                 yPercent: exitY,
+
                 scale: exitScale,
-                opacity: 0.08,
 
-                /*
-                 * Almost zero blur.
-                 * This prevents GPU-heavy blur animation.
-                 */
-
-                filter: "blur(0.2px)",
+                opacity: 0,
 
                 duration: 1,
 
@@ -386,69 +296,8 @@ export default function ProjectsSection() {
             );
 
             /*
-             * Current image.
-             */
-
-            if (currentImage) {
-              timeline.to(
-                currentImage,
-                {
-                  scale: 1.065,
-                  yPercent: -1,
-
-                  duration: 1,
-
-                  ease: "power2.inOut",
-                },
-                index,
-              );
-            }
-
-            /*
-             * Current content exits.
-             */
-
-            if (currentContent) {
-              timeline.to(
-                currentContent,
-                {
-                  y: -10,
-                  opacity: 0,
-
-                  duration: 0.42,
-
-                  ease: "power2.out",
-                },
-                index + 0.25,
-              );
-            }
-
-            if (currentTitle) {
-              timeline.to(
-                currentTitle,
-                {
-                  y: -8,
-                  opacity: 0,
-
-                  duration: 0.35,
-
-                  ease: "power2.out",
-                },
-                index + 0.28,
-              );
-            }
-
-            /*
              * =================================================
              * NEXT CARD
-             *
-             * This is the important part.
-             *
-             * Underlying card:
-             *
-             * blur 2.5px → 0px
-             * scale → 1
-             * y → 0
              * =================================================
              */
 
@@ -456,79 +305,31 @@ export default function ProjectsSection() {
               nextCard,
               {
                 y: 0,
+
                 scale: 1,
+
                 opacity: 1,
-                filter: "blur(0px)",
 
                 duration: 1,
 
                 ease: "power2.inOut",
               },
-              index + 0.02,
+              index,
             );
+          });
 
-            /*
-             * Next image.
-             */
+          /*
+           * ===================================================
+           * REFRESH AFTER LAYOUT
+           * ===================================================
+           */
 
-            if (nextImage) {
-              timeline.to(
-                nextImage,
-                {
-                  scale: 1,
-                  yPercent: 0,
-
-                  duration: 1,
-
-                  ease: "power2.inOut",
-                },
-                index + 0.02,
-              );
-            }
-
-            /*
-             * Next content.
-             */
-
-            if (nextContent) {
-              timeline.to(
-                nextContent,
-                {
-                  y: 0,
-                  opacity: 1,
-
-                  duration: 0.4,
-
-                  ease: "power2.out",
-                },
-                index + 0.45,
-              );
-            }
-
-            if (nextTitle) {
-              timeline.to(
-                nextTitle,
-                {
-                  y: 0,
-                  opacity: 1,
-
-                  duration: 0.35,
-
-                  ease: "power2.out",
-                },
-                index + 0.48,
-              );
-            }
+          requestAnimationFrame(() => {
+            ScrollTrigger.refresh();
           });
         },
       );
     }, section);
-
-    /*
-     * --------------------------------------------------------
-     * CLEANUP
-     * --------------------------------------------------------
-     */
 
     return () => {
       ctx.revert();
@@ -558,58 +359,7 @@ export default function ProjectsSection() {
       "
     >
       {/* =====================================================
-          AMBIENT LIGHT
-      ====================================================== */}
-
-      <div
-        aria-hidden="true"
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          overflow-hidden
-        "
-      >
-        <div
-          ref={ambientRef}
-          className="
-            absolute
-            left-[-160px]
-            top-[10%]
-
-            h-[340px]
-            w-[340px]
-
-            rounded-full
-
-            bg-[#B7FF00]/[0.022]
-
-            blur-[110px]
-
-            will-change-transform
-          "
-        />
-
-        <div
-          className="
-            absolute
-            bottom-[-160px]
-            right-[-160px]
-
-            h-[400px]
-            w-[400px]
-
-            rounded-full
-
-            bg-[#B7FF00]/[0.014]
-
-            blur-[120px]
-          "
-        />
-      </div>
-
-      {/* =====================================================
-          HEADER
+          SECTION HEADER
       ====================================================== */}
 
       <div
@@ -623,14 +373,14 @@ export default function ProjectsSection() {
 
           px-0
 
-          pb-6
-          pt-14
+          pb-5
+          pt-12
 
-          sm:pb-7
-          sm:pt-16
+          sm:pb-6
+          sm:pt-14
 
-          lg:pb-8
-          lg:pt-20
+          lg:pb-7
+          lg:pt-18
         "
       >
         <div
@@ -644,12 +394,14 @@ export default function ProjectsSection() {
             lg:justify-between
           "
         >
-          {/* Title */}
+          {/* =================================================
+              TITLE
+          ================================================== */}
 
           <div>
             <div
               className="
-                mb-3
+                mb-2.5
 
                 flex
                 items-center
@@ -665,7 +417,7 @@ export default function ProjectsSection() {
 
                   bg-[#B7FF00]
 
-                  shadow-[0_0_12px_rgba(183,255,0,0.35)]
+                  shadow-[0_0_10px_rgba(183,255,0,0.3)]
                 "
               />
 
@@ -690,7 +442,7 @@ export default function ProjectsSection() {
               className="
                 font-[var(--font-space)]
 
-                text-[clamp(3rem,6.7vw,7rem)]
+                text-[clamp(3rem,6.6vw,7rem)]
 
                 font-medium
 
@@ -715,20 +467,22 @@ export default function ProjectsSection() {
             </h2>
           </div>
 
-          {/* Description */}
+          {/* =================================================
+              DESCRIPTION
+          ================================================== */}
 
           <p
             className="
-              max-w-[320px]
+              max-w-[315px]
 
               text-[11px]
 
-              leading-5.5
+              leading-5
 
-              text-white/30
+              text-white/28
 
               sm:text-xs
-              sm:leading-6
+              sm:leading-5.5
             "
           >
             A curated selection of Shopify experiences
@@ -746,6 +500,7 @@ export default function ProjectsSection() {
         ref={stageRef}
         className="
           relative
+
           z-10
 
           h-[100svh]
@@ -758,30 +513,29 @@ export default function ProjectsSection() {
             relative
 
             flex
+
             h-full
             w-full
 
             items-center
             justify-center
-
-            px-0
           "
         >
           {/* =================================================
-              STACK
+              PROJECT CARD STACK
           ================================================== */}
 
           <div
             className="
               relative
 
-              h-[67svh]
+              h-[66svh]
 
               w-full
 
-              sm:h-[70svh]
+              sm:h-[69svh]
 
-              lg:h-[73svh]
+              lg:h-[72svh]
             "
           >
             {featuredProjects.map(
@@ -799,11 +553,9 @@ export default function ProjectsSection() {
                     rounded-[16px]
 
                     border
-                    border-white/[0.085]
+                    border-white/[0.09]
 
-                    bg-[#080808]
-
-                    shadow-[0_20px_65px_rgba(0,0,0,0.48)]
+                    shadow-[0_20px_60px_rgba(0,0,0,0.45)]
 
                     will-change-transform
 
@@ -811,7 +563,41 @@ export default function ProjectsSection() {
 
                     lg:rounded-[24px]
                   "
+                  style={{
+                    background: `
+                      linear-gradient(
+                        135deg,
+                        ${project.cardBg ?? "#0A0A0A"} 0%,
+                        rgba(255,255,255,0.028) 48%,
+                        rgba(183,255,0,0.025) 100%
+                      )
+                    `,
+                  }}
                 >
+                  {/* =================================================
+                      GLASS SURFACE
+                  ================================================== */}
+
+                  <div
+                    aria-hidden="true"
+                    className="
+                      pointer-events-none
+
+                      absolute
+                      inset-0
+
+                      z-[1]
+
+                      bg-gradient-to-br
+
+                      from-white/[0.045]
+
+                      via-transparent
+
+                      to-[#B7FF00]/[0.018]
+                    "
+                  />
+
                   {/* =================================================
                       IMAGE
                   ================================================== */}
@@ -820,6 +606,11 @@ export default function ProjectsSection() {
                     className="
                       absolute
                       inset-0
+
+                      flex
+
+                      items-center
+                      justify-center
 
                       overflow-hidden
                     "
@@ -830,17 +621,21 @@ export default function ProjectsSection() {
                       className="
                         project-card-image
 
+                        block
+
                         h-full
                         w-full
 
                         object-cover
+                        object-center
 
-                        brightness-[0.86]
-                        contrast-[1.03]
-
-                        will-change-transform
+                        max-md:object-contain
 
                         select-none
+
+                        [backface-visibility:hidden]
+
+                        will-change-transform
                       "
                       loading={
                         index === 0
@@ -852,7 +647,7 @@ export default function ProjectsSection() {
                     />
 
                     {/* =================================================
-                        DARK GRADIENT
+                        BOTTOM GRADIENT
                     ================================================== */}
 
                     <div
@@ -861,40 +656,22 @@ export default function ProjectsSection() {
 
                         absolute
                         inset-0
+
+                        z-[2]
 
                         bg-gradient-to-t
 
                         from-black/[0.94]
-                        via-black/[0.3]
-                        to-black/[0.02]
+
+                        via-black/[0.25]
+
+                        to-transparent
                       "
                     />
 
                     {/* =================================================
-                        LOGO LIME GLOW
+                        SIDE VIGNETTE
                     ================================================== */}
-
-                    <div
-                      className="
-                        pointer-events-none
-
-                        absolute
-
-                        bottom-[-20%]
-                        left-[12%]
-
-                        h-[45%]
-                        w-[76%]
-
-                        rounded-full
-
-                        bg-[#B7FF00]/[0.018]
-
-                        blur-[90px]
-                      "
-                    />
-
-                    {/* Vignette */}
 
                     <div
                       className="
@@ -903,11 +680,15 @@ export default function ProjectsSection() {
                         absolute
                         inset-0
 
+                        z-[2]
+
                         bg-gradient-to-r
 
-                        from-black/[0.12]
+                        from-black/[0.08]
+
                         via-transparent
-                        to-black/[0.08]
+
+                        to-black/[0.06]
                       "
                     />
                   </div>
@@ -918,8 +699,6 @@ export default function ProjectsSection() {
 
                   <div
                     className="
-                      project-card-meta
-
                       absolute
 
                       left-4
@@ -929,6 +708,7 @@ export default function ProjectsSection() {
                       z-20
 
                       flex
+
                       items-center
                       justify-between
 
@@ -941,10 +721,14 @@ export default function ProjectsSection() {
                       lg:top-7
                     "
                   >
+                    {/* Counter */}
+
                     <div
                       className="
                         flex
+
                         items-center
+
                         gap-2.5
                       "
                     >
@@ -967,6 +751,7 @@ export default function ProjectsSection() {
                       <span
                         className="
                           h-px
+
                           w-5
 
                           bg-white/20
@@ -977,7 +762,7 @@ export default function ProjectsSection() {
                         className="
                           text-[9px]
 
-                          tracking-[0.18em]
+                          tracking-[0.2em]
 
                           text-white/25
                         "
@@ -988,6 +773,8 @@ export default function ProjectsSection() {
                       </span>
                     </div>
 
+                    {/* Industry */}
+
                     <span
                       className="
                         rounded-full
@@ -995,7 +782,7 @@ export default function ProjectsSection() {
                         border
                         border-white/[0.11]
 
-                        bg-black/[0.18]
+                        bg-white/[0.035]
 
                         px-3
                         py-1.5
@@ -1008,7 +795,7 @@ export default function ProjectsSection() {
 
                         text-white/50
 
-                        backdrop-blur-sm
+                        backdrop-blur-md
                       "
                     >
                       {project.industry}
@@ -1016,13 +803,11 @@ export default function ProjectsSection() {
                   </div>
 
                   {/* =================================================
-                      CONTENT
+                      PROJECT CONTENT
                   ================================================== */}
 
                   <div
                     className="
-                      project-card-content
-
                       absolute
 
                       bottom-4
@@ -1053,7 +838,9 @@ export default function ProjectsSection() {
                         lg:justify-between
                       "
                     >
-                      {/* Left */}
+                      {/* =================================================
+                          LEFT CONTENT
+                      ================================================== */}
 
                       <div
                         className="
@@ -1080,22 +867,22 @@ export default function ProjectsSection() {
 
                         <h3
                           className="
-                            project-card-title
-
                             font-[var(--font-space)]
 
-                            text-[clamp(2.15rem,5.5vw,6rem)]
+                            text-[clamp(2rem,5.4vw,6rem)]
 
                             font-medium
 
-                            leading-[0.85]
+                            leading-[0.86]
 
                             tracking-[-0.07em]
 
                             bg-gradient-to-r
 
                             from-white
+
                             via-white/80
+
                             to-white/25
 
                             bg-clip-text
@@ -1121,12 +908,16 @@ export default function ProjectsSection() {
                         </p>
                       </div>
 
-                      {/* Right */}
+                      {/* =================================================
+                          RIGHT CONTENT
+                      ================================================== */}
 
                       <div
                         className="
                           flex
+
                           shrink-0
+
                           flex-col
 
                           items-start
@@ -1140,9 +931,8 @@ export default function ProjectsSection() {
 
                         <div
                           className="
-                            project-card-tags
-
                             flex
+
                             flex-wrap
 
                             gap-1
@@ -1161,7 +951,7 @@ export default function ProjectsSection() {
                                   border
                                   border-white/[0.1]
 
-                                  bg-black/[0.16]
+                                  bg-white/[0.03]
 
                                   px-2.5
                                   py-1.5
@@ -1174,7 +964,7 @@ export default function ProjectsSection() {
 
                                   text-white/45
 
-                                  backdrop-blur-sm
+                                  backdrop-blur-md
                                 "
                               >
                                 {role}
@@ -1187,8 +977,6 @@ export default function ProjectsSection() {
                         <Link
                           href={`/projects/${project.slug}`}
                           className="
-                            project-card-cta
-
                             group
 
                             inline-flex
@@ -1209,6 +997,7 @@ export default function ProjectsSection() {
                           <span
                             className="
                               transition-colors
+
                               duration-300
 
                               group-hover:text-white
@@ -1235,9 +1024,11 @@ export default function ProjectsSection() {
                               bg-white/[0.035]
 
                               transition-all
+
                               duration-500
 
                               group-hover:-translate-y-0.5
+
                               group-hover:translate-x-0.5
 
                               group-hover:border-[#B7FF00]/40
@@ -1262,7 +1053,7 @@ export default function ProjectsSection() {
           </div>
 
           {/* =================================================
-              PROGRESS
+              PROJECT COUNTER
           ================================================== */}
 
           <div
@@ -1275,7 +1066,9 @@ export default function ProjectsSection() {
               z-30
 
               flex
+
               items-center
+
               gap-1.5
 
               sm:bottom-5
@@ -1316,7 +1109,9 @@ export default function ProjectsSection() {
             </span>
           </div>
 
-          {/* Scroll hint */}
+          {/* =================================================
+              SCROLL HINT
+          ================================================== */}
 
           <div
             className="
@@ -1352,7 +1147,7 @@ export default function ProjectsSection() {
       </div>
 
       {/* =====================================================
-          VIEW ALL
+          VIEW ALL PROJECTS
       ====================================================== */}
 
       <div
@@ -1363,10 +1158,12 @@ export default function ProjectsSection() {
           mx-auto
 
           flex
+
           w-full
           max-w-[1400px]
 
           flex-col
+
           items-center
 
           px-0
@@ -1425,7 +1222,9 @@ export default function ProjectsSection() {
             bg-gradient-to-r
 
             from-white
+
             via-white/70
+
             to-[#B7FF00]/60
 
             bg-clip-text
@@ -1457,9 +1256,11 @@ export default function ProjectsSection() {
               text-white/55
 
               transition-all
+
               duration-500
 
               group-hover:-translate-y-1
+
               group-hover:translate-x-1
 
               group-hover:border-[#B7FF00]/40
@@ -1495,6 +1296,7 @@ export default function ProjectsSection() {
               bg-[#B7FF00]/70
 
               transition-all
+
               duration-700
 
               group-hover:w-[calc(100%-2.75rem)]
