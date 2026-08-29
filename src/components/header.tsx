@@ -254,51 +254,40 @@ export function Header() {
             ================================================== */}
 
             <motion.a
-              href="/"
-              whileHover={
-                reduceMotion
-                  ? undefined
-                  : {
-                      scale: 1.035,
-                    }
-              }
-              whileTap={
-                reduceMotion
-                  ? undefined
-                  : {
-                      scale: 0.96,
-                    }
-              }
-              className="
-                relative
-                z-20
-                flex
-                shrink-0
-                items-center
-                outline-none
-              "
-              aria-label="Mahamudul Hasan Home"
-            >
-              <span
-                className="
-                  font-[var(--font-space)]
-                  text-[24px]
-                  font-bold
-                  leading-none
-                  tracking-[-0.075em]
-                  text-white
+  href="/"
+  whileHover={
+    reduceMotion
+      ? undefined
+      : { scale: 1.035 }
+  }
+  whileTap={
+    reduceMotion
+      ? undefined
+      : { scale: 0.96 }
+  }
+  className="
+    relative
+    z-20
+    flex
+    shrink-0
+    items-center
+    outline-none
+  "
+  aria-label="Mahamudul Sobuj Home"
+>
+  <img
+    src="/images/logo.png"
+    alt="Mahamudul Sobuj"
+    className="  h-12
+    w-auto
+    object-contain
 
-                  sm:text-[27px]
-
-                  lg:text-[28px]
-                "
-              >
-                MH
-                <span className="text-cyan-400">
-                  .
-                </span>
-              </span>
-            </motion.a>
+    sm:h-14
+    lg:h-16
+    xl:h-[68px]
+    "
+  />
+</motion.a>
 
             {/* =================================================
                 DESKTOP CENTER NAVIGATION
