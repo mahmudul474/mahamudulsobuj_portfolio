@@ -264,10 +264,6 @@ export default function ProjectsSection() {
 
         {/* ======================================================
             MAIN CONTENT
-
-            IMPORTANT:
-            Mobile = absolute layers
-            Desktop = grid
         ======================================================= */}
 
         <div
@@ -285,12 +281,6 @@ export default function ProjectsSection() {
         >
           {/* ====================================================
               LEFT / TITLE PANEL
-
-              MOBILE:
-              Absolute overlay — DOES NOT CREATE COLUMN GAP
-
-              DESKTOP:
-              Normal grid column
           ===================================================== */}
 
           <aside
@@ -326,9 +316,7 @@ export default function ProjectsSection() {
                 flex-col
               "
             >
-              {/* =================================================
-                  EYEBROW
-              ================================================== */}
+              {/* EYEBROW */}
 
               <div
                 className="
@@ -362,9 +350,7 @@ export default function ProjectsSection() {
                 </span>
               </div>
 
-              {/* =================================================
-                  TITLE
-              ================================================== */}
+              {/* TITLE */}
 
               <h2
                 className="
@@ -415,12 +401,7 @@ export default function ProjectsSection() {
                 </span>
               </h2>
 
-              {/* =================================================
-                  DESCRIPTION
-
-                  MOBILE:
-                  Compact so card can start earlier
-              ================================================== */}
+              {/* DESCRIPTION */}
 
               <p
                 className="
@@ -446,9 +427,7 @@ export default function ProjectsSection() {
                 their best.
               </p>
 
-              {/* =================================================
-                  VIEW ALL — DESKTOP ONLY
-              ================================================== */}
+              {/* VIEW ALL */}
 
               <Link
                 href="/projects"
@@ -502,9 +481,7 @@ export default function ProjectsSection() {
                 </span>
               </Link>
 
-              {/* =================================================
-                  PROJECT LIST — DESKTOP
-              ================================================== */}
+              {/* PROJECT LIST */}
 
               <div
                 data-project-list
@@ -648,9 +625,7 @@ export default function ProjectsSection() {
                 </div>
               </div>
 
-              {/* =================================================
-                  DESKTOP ARROWS
-              ================================================== */}
+              {/* DESKTOP ARROWS */}
 
               <div
                 className="
@@ -731,12 +706,6 @@ export default function ProjectsSection() {
 
           {/* ====================================================
               PROJECT AREA
-
-              MOBILE:
-              Absolute full frame
-
-              DESKTOP:
-              Normal grid column
           ===================================================== */}
 
           <div
@@ -765,9 +734,7 @@ export default function ProjectsSection() {
                 min-h-0
               "
             >
-              {/* =================================================
-                  COUNTER
-              ================================================== */}
+              {/* COUNTER */}
 
               <div
                 className="
@@ -823,13 +790,6 @@ export default function ProjectsSection() {
 
               {/* =================================================
                   CARD STAGE
-
-                  THIS FIXES THE MOBILE GAP
-
-                  Mobile card starts immediately below
-                  the title/description area.
-
-                  No normal-flow column is created.
               ================================================== */}
 
               <div
@@ -865,56 +825,48 @@ export default function ProjectsSection() {
                       return null;
                     }
 
-                    const isActive = depth === 0;
+                    const isActive =
+                      depth === 0;
 
-                    /* =================================================
-                       STACK POSITION
-                    ================================================== */
+                    const translateX =
+                      isMobile
+                        ? depth * 8
+                        : depth * 20;
 
-                    const translateX = isMobile
-                      ? depth * 8
-                      : depth * 20;
+                    const translateY =
+                      isMobile
+                        ? depth * 7
+                        : depth * 11;
 
-                    const translateY = isMobile
-                      ? depth * 7
-                      : depth * 11;
+                    const scale =
+                      isMobile
+                        ? 1 - depth * 0.018
+                        : 1 - depth * 0.027;
 
-                    /* =================================================
-                       SCALE
-                    ================================================== */
+                    const rotate =
+                      isActive
+                        ? 0
+                        : depth === 1
+                          ? 0.65
+                          : depth === 2
+                            ? 1.1
+                            : 1.45;
 
-                    const scale = isMobile
-                      ? 1 - depth * 0.018
-                      : 1 - depth * 0.027;
-
-                    /* =================================================
-                       ANGLE
-                    ================================================== */
-
-                    const rotate = isActive
-                      ? 0
-                      : depth === 1
-                        ? 0.65
-                        : depth === 2
-                          ? 1.1
-                          : 1.45;
-
-                    /* =================================================
-                       OPACITY
-                    ================================================== */
-
-                    const opacity = isActive
-                      ? 1
-                      : depth === 1
-                        ? 0.9
-                        : depth === 2
-                          ? 0.7
-                          : 0.5;
+                    const opacity =
+                      isActive
+                        ? 1
+                        : depth === 1
+                          ? 0.9
+                          : depth === 2
+                            ? 0.7
+                            : 0.5;
 
                     return (
                       <article
                         key={project.id}
                         className="
+                          group/card
+
                           absolute
                           inset-0
                           overflow-hidden
@@ -934,11 +886,6 @@ export default function ProjectsSection() {
                           lg:rounded-[23px]
                         "
                         style={{
-                          /*
-                           * IMPORTANT:
-                           * cardBg comes directly
-                           * from projects.json
-                           */
                           backgroundColor:
                             project.cardBg ||
                             "#10140A",
@@ -989,12 +936,14 @@ export default function ProjectsSection() {
 
                               max-[767px]:object-contain
                               max-[767px]:object-center
+
+                              transition-transform
+                              duration-700
+                              group-hover/card:scale-[1.015]
                             "
                           />
 
-                          {/* =================================================
-                              BOTTOM SHADOW
-                          ================================================== */}
+                          {/* BOTTOM SHADOW */}
 
                           <div
                             className="
@@ -1012,11 +961,48 @@ export default function ProjectsSection() {
                         </div>
 
                         {/* =================================================
+                            FULL CARD CLICK LAYER
+
+                            This makes the complete active card clickable.
+
+                            It sits above image/background but below:
+                            - Case Study button
+                            - Project information
+                            
+                            pointer-events are disabled for inactive
+                            stacked cards so only the active card
+                            navigates.
+                        ================================================== */}
+
+                        {isActive && (
+                          <Link
+                            href={`/projects/${project.slug}`}
+                            aria-label={`View ${project.projectName} case study`}
+                            className="
+                              absolute
+                              inset-0
+                              z-[25]
+                              cursor-pointer
+                              rounded-[18px]
+                              outline-none
+
+                              focus-visible:ring-2
+                              focus-visible:ring-[#B7FF00]
+
+                              sm:rounded-[20px]
+
+                              lg:rounded-[23px]
+                            "
+                          />
+                        )}
+
+                        {/* =================================================
                             CARD NUMBER
                         ================================================== */}
 
                         <span
                           className="
+                            pointer-events-none
                             absolute
                             left-5
                             top-5
@@ -1040,12 +1026,17 @@ export default function ProjectsSection() {
 
                         {/* =================================================
                             VIEW CASE STUDY
+
+                            z-[40] keeps this button above
+                            the full-card Link.
                         ================================================== */}
 
                         <Link
                           href={`/projects/${project.slug}`}
+                          aria-label={`View ${project.projectName} case study`}
                           className="
                             group/case
+
                             absolute
                             right-4
                             top-4
@@ -1117,10 +1108,15 @@ export default function ProjectsSection() {
 
                         {/* =================================================
                             PROJECT DETAILS
+
+                            pointer-events-none is important because
+                            the whole card is now clickable.
                         ================================================== */}
 
                         <div
                           className="
+                            pointer-events-none
+
                             absolute
                             bottom-5
                             left-5
@@ -1310,7 +1306,10 @@ export default function ProjectsSection() {
                             duration-500
                           "
                           style={{
-                            width: active ? 28 : 7,
+                            width: active
+                              ? 28
+                              : 7,
+
                             backgroundColor:
                               active
                                 ? "#B7FF00"

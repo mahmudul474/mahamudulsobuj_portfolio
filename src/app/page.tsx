@@ -6,6 +6,7 @@ import Hero from "@/components/hero";
 import { Reveal, Magnetic } from "@/components/motion";
 import Link from "next/link";
 import ProjectsSection from "@/components/projects/ProjectsSection";
+import About from "@/components/about/About";
 
 export default async function Home() {
  
@@ -41,6 +42,7 @@ export default async function Home() {
         ====================================================== */}
 
         <ProjectsSection />
+        <About />
         {/* =====================================================
             TESTIMONIALS
         ====================================================== */}
