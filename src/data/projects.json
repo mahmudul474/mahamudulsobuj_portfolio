@@ -1,4 +1,5 @@
 [
+  
   {
     "id": "project-01",
     "slug": "velora-fashion",
@@ -65,6 +66,7 @@
 
   {
     "id": "project-02",
+    "cardBg": "#0B0D08",
     "slug": "nordic-home",
     "projectName": "Nordic Home",
     "brand": "Nordic Home",
@@ -129,6 +131,201 @@
 
   {
     "id": "project-03",
+    "cardBg": "#0B0D08",
+    "slug": "purea-beauty",
+    "projectName": "Purea Beauty",
+    "brand": "Purea",
+    "industry": "Beauty & Skincare",
+    "projectType": "Shopify Conversion Optimization",
+
+    "thumbnail": "/projects/project-03/web.webp",
+
+    "challenge": "Purea needed a more persuasive product experience with clearer information hierarchy and a smoother path from product discovery to checkout.",
+
+    "problem": [
+      "Low product engagement",
+      "Unclear product information",
+      "Weak call-to-action hierarchy",
+      "Poor mobile product experience"
+    ],
+
+    "solution": "Improved the Shopify storefront with conversion-focused product layouts, stronger content hierarchy, optimized CTAs, trust elements, and a responsive mobile experience.",
+
+    "myRole": [
+      "Shopify Development",
+      "CRO",
+      "Product Page Optimization",
+      "UX Improvement"
+    ],
+
+    "keyFeatures": [
+      "Conversion-focused product page",
+      "Sticky add-to-cart experience",
+      "Product information hierarchy",
+      "Trust-building sections",
+      "Mobile-first UX",
+      "Custom Shopify sections"
+    ],
+
+    "technologies": [
+      "Shopify",
+      "Liquid",
+      "JavaScript",
+      "CSS",
+      "GA4",
+      "GTM"
+    ],
+
+    "duration": "3 Weeks",
+
+    "screenshots": {
+      "web": "/projects/project-03/web.webp",
+      "tablet": "/projects/project-03/tablet.webp",
+      "mobile": "/projects/project-03/mobile.webp"
+    },
+
+    "testimonial": {
+      "quote": "The product pages are cleaner, easier to understand, and much more aligned with our brand.",
+      "name": "Emma Wilson",
+      "role": "Founder, Purea Beauty"
+    },
+
+    "liveUrl": "https://example.com",
+
+    "featured": true
+  }
+  ,{
+    "id": "project-04",
+    "slug": "hasan-fashion",
+    "projectName": "Velora Fashion",
+    "brand": "Velora",
+    "industry": "Fashion & Apparel",
+    "projectType": "Shopify Store Redesign",
+
+    "thumbnail": "https://www.pngfind.com/pngs/m/29-290993_ecommerce-websites-shopify-premium-themes-hd-png-download.png",
+
+    "challenge": "The brand needed a modern Shopify storefront that could deliver a stronger visual experience while making the shopping journey simpler and more conversion focused.",
+
+    "problem": [
+      "Outdated storefront design",
+      "Weak mobile shopping experience",
+      "Unclear product hierarchy",
+      "Inconsistent visual system"
+    ],
+
+    "solution": "Redesigned and rebuilt the Shopify storefront with a modern visual system, custom sections, improved product presentation, responsive layouts, and a streamlined conversion journey.",
+
+    "myRole": [
+      "Shopify Development",
+      "Theme Customization",
+      "UI/UX Implementation",
+      "CRO"
+    ],
+
+    "keyFeatures": [
+      "Custom Shopify 2.0 sections",
+      "Conversion-focused product page",
+      "Mobile-first responsive design",
+      "Advanced navigation",
+      "Custom micro-interactions",
+      "Optimized shopping experience"
+    ],
+
+    "technologies": [
+      "Shopify",
+      "Liquid",
+      "JavaScript",
+      "CSS",
+      "GSAP"
+    ],
+
+    "duration": "4 Weeks",
+
+    "screenshots": {
+      "web": "/projects/project-01/web.webp",
+      "tablet": "/projects/project-01/tablet.webp",
+      "mobile": "/projects/project-01/mobile.webp"
+    },
+
+    "testimonial": {
+      "quote": "The new store feels much more premium and the overall shopping experience is significantly better.",
+      "name": "Alex Morgan",
+      "role": "Founder, Velora"
+    },
+
+    "liveUrl": "https://example.com",
+
+    "featured": true
+  },
+
+  {
+    "id": "project-05",
+    "cardBg": "#0B0D08",
+    "slug": "nordic-home",
+    "projectName": "Nordic Home",
+    "brand": "Nordic Home",
+    "industry": "Home & Lifestyle",
+    "projectType": "Shopify Store Development",
+
+    "thumbnail": "https://simicart.com/wp-content/uploads/shopify-new-themes-1024x576.png",
+
+    "challenge": "Nordic Home needed a clean ecommerce experience that could communicate its premium product positioning while remaining fast and easy to navigate.",
+
+    "problem": [
+      "Poor product discovery",
+      "Weak category navigation",
+      "Limited product storytelling",
+      "Inconsistent mobile layouts"
+    ],
+
+    "solution": "Built a refined Shopify storefront with custom product sections, structured navigation, responsive layouts, and a premium editorial-style visual experience.",
+
+    "myRole": [
+      "Shopify Development",
+      "Custom Theme Development",
+      "UI Implementation",
+      "Performance Optimization"
+    ],
+
+    "keyFeatures": [
+      "Custom homepage architecture",
+      "Advanced collection experience",
+      "Custom product sections",
+      "Responsive product layouts",
+      "Editorial content blocks",
+      "Performance-focused implementation"
+    ],
+
+    "technologies": [
+      "Shopify",
+      "Liquid",
+      "JavaScript",
+      "CSS",
+      "Shopify 2.0"
+    ],
+
+    "duration": "5 Weeks",
+
+    "screenshots": {
+      "web": "/projects/project-02/web.webp",
+      "tablet": "/projects/project-02/tablet.webp",
+      "mobile": "/projects/project-02/mobile.webp"
+    },
+
+    "testimonial": {
+      "quote": "Mahamudul understood the brand direction quickly and translated it into a polished Shopify experience.",
+      "name": "Daniel Carter",
+      "role": "Founder, Nordic Home"
+    },
+
+    "liveUrl": "https://example.com",
+
+    "featured": true
+  },
+
+  {
+    "id": "project-06",
+    "cardBg": "#0B0D08",
     "slug": "purea-beauty",
     "projectName": "Purea Beauty",
     "brand": "Purea",

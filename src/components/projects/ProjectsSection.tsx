@@ -1,344 +1,205 @@
- "use client";
+"use client";
 
-import { useLayoutEffect, useMemo, useRef } from "react";
 import Link from "next/link";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowUpRight } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+} from "lucide-react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import projects from "@/data/projects.json";
 
-gsap.registerPlugin(ScrollTrigger);
+type Project = (typeof projects)[number] & {
+  cardBg?: string;
+};
+
+const MAX_STACK_CARDS = 3;
+
+const clamp = (
+  value: number,
+  min: number,
+  max: number,
+) => Math.min(Math.max(value, min), max);
 
 export default function ProjectsSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef<HTMLSpanElement>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const activeIndexRef = useRef(0);
 
-  /*
-   * =========================================================
-   * HARD-CODED CARD BACKGROUNDS
-   * =========================================================
-   *
-   * JSON-এ cardBg লাগবে না.
-   *
-   * Project index অনুযায়ী background automatically select হবে.
-   */
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const cardBackgrounds = [
-    "#0B0D08",
-    "#090C12",
-    "#100B0B",
-    "#0C0A12",
-    "#0A0F0D",
-    "#10100A",
-  ];
+  /* ============================================================
+     FEATURED PROJECTS
+  ============================================================ */
 
-  /*
-   * =========================================================
-   * FEATURED PROJECTS
-   * =========================================================
-   */
-
-  const featuredProjects = useMemo(() => {
-    return projects
+  const featuredProjects = useMemo<Project[]>(() => {
+    return (projects as Project[])
       .filter((project) => project.featured === true)
       .slice(0, 6);
   }, []);
 
-  /*
-   * =========================================================
-   * GSAP PROJECT STACK
-   * =========================================================
-   */
+  const total = featuredProjects.length;
 
-  useLayoutEffect(() => {
-    const section = sectionRef.current;
-    const stage = stageRef.current;
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
 
-    if (!section || !stage || featuredProjects.length === 0) {
-      return;
-    }
+  useEffect(() => {
+    const updateScreen = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
 
-    const cards = gsap.utils.toArray<HTMLElement>(
-      ".project-stack-card",
-    );
+    updateScreen();
 
-    if (!cards.length) {
-      return;
-    }
-
-    const ctx = gsap.context(() => {
-      const mm = gsap.matchMedia();
-
-      mm.add(
-        {
-          desktop: "(min-width: 1024px)",
-          tablet:
-            "(min-width: 768px) and (max-width: 1023px)",
-          mobile: "(max-width: 767px)",
-          reducedMotion:
-            "(prefers-reduced-motion: reduce)",
-        },
-        (context) => {
-          const conditions = context.conditions as {
-            desktop: boolean;
-            tablet: boolean;
-            mobile: boolean;
-            reducedMotion: boolean;
-          };
-
-          const {
-            desktop,
-            tablet,
-            mobile,
-            reducedMotion,
-          } = conditions;
-
-          /*
-           * ===================================================
-           * REDUCED MOTION
-           * ===================================================
-           */
-
-          if (reducedMotion) {
-            gsap.set(cards, {
-              clearProps: "all",
-            });
-
-            return;
-          }
-
-          /*
-           * ===================================================
-           * RESPONSIVE VALUES
-           * ===================================================
-           */
-
-          const stackOffset = desktop
-            ? 14
-            : tablet
-              ? 9
-              : 5;
-
-          const stackScale = desktop
-            ? 0.014
-            : tablet
-              ? 0.011
-              : 0.006;
-
-          const exitScale = desktop
-            ? 0.97
-            : tablet
-              ? 0.975
-              : 0.98;
-
-          const exitY = desktop
-            ? -105
-            : tablet
-              ? -103
-              : -101;
-
-          /*
-           * ===================================================
-           * INITIAL CARD STATE
-           * ===================================================
-           */
-
-          cards.forEach((card, index) => {
-            gsap.set(card, {
-              y: index * stackOffset,
-
-              scale:
-                1 - index * stackScale,
-
-              opacity:
-                index === 0
-                  ? 1
-                  : 0.95,
-
-              zIndex:
-                cards.length - index,
-
-              force3D: true,
-
-              willChange:
-                "transform, opacity",
-
-              backfaceVisibility:
-                "hidden",
-            });
-          });
-
-          /*
-           * ===================================================
-           * MAIN SCROLL TIMELINE
-           * ===================================================
-           */
-
-          const timeline = gsap.timeline({
-            defaults: {
-              overwrite: "auto",
-            },
-
-            scrollTrigger: {
-              trigger: stage,
-
-              /*
-               * Section must reach viewport top first.
-               *
-               * No premature animation.
-               */
-
-              start: "top top",
-
-              /*
-               * Enough scroll distance for all projects.
-               */
-
-              end: `+=${cards.length * (
-                desktop
-                  ? 85
-                  : tablet
-                    ? 78
-                    : 72
-              )}%`,
-
-              /*
-               * Keep stage pinned.
-               */
-
-              pin: true,
-
-              pinSpacing: true,
-
-              /*
-               * Smooth scroll-linked animation.
-               */
-
-              scrub: desktop
-                ? 0.12
-                : mobile
-                  ? 0.07
-                  : 0.1,
-
-              anticipatePin: 1,
-
-              invalidateOnRefresh: true,
-
-              fastScrollEnd: false,
-
-              /*
-               * Update counter.
-               */
-
-              onUpdate: (self) => {
-                if (!progressRef.current) {
-                  return;
-                }
-
-                const total = cards.length;
-
-                const current = Math.min(
-                  total,
-                  Math.max(
-                    1,
-                    Math.floor(
-                      self.progress * total,
-                    ) + 1,
-                  ),
-                );
-
-                progressRef.current.textContent =
-                  String(current).padStart(
-                    2,
-                    "0",
-                  );
-              },
-            },
-          });
-
-          /*
-           * ===================================================
-           * CARD TRANSITIONS
-           * ===================================================
-           */
-
-          cards.forEach((card, index) => {
-            if (index >= cards.length - 1) {
-              return;
-            }
-
-            const nextCard = cards[index + 1];
-
-            /*
-             * CURRENT CARD
-             *
-             * No blur.
-             * No rotation.
-             * No filter.
-             */
-
-            timeline.to(
-              card,
-              {
-                yPercent: exitY,
-
-                scale: exitScale,
-
-                opacity: 0,
-
-                duration: 1,
-
-                ease: "power2.inOut",
-              },
-              index,
-            );
-
-            /*
-             * NEXT CARD
-             */
-
-            timeline.to(
-              nextCard,
-              {
-                y: 0,
-
-                scale: 1,
-
-                opacity: 1,
-
-                duration: 1,
-
-                ease: "power2.inOut",
-              },
-              index,
-            );
-          });
-
-          /*
-           * ===================================================
-           * REFRESH AFTER LAYOUT
-           * ===================================================
-           */
-
-          requestAnimationFrame(() => {
-            ScrollTrigger.refresh();
-          });
-        },
-      );
-    }, section);
+    window.addEventListener("resize", updateScreen);
 
     return () => {
-      ctx.revert();
+      window.removeEventListener("resize", updateScreen);
     };
-  }, [featuredProjects.length]);
+  }, []);
 
-  /*
-   * =========================================================
-   * EMPTY STATE
-   * =========================================================
-   */
+  /* ============================================================
+     SCROLL → PROJECT
+  ============================================================ */
+
+  useEffect(() => {
+    const section = sectionRef.current;
+
+    if (!section || total <= 0) return;
+
+    const updateFromScroll = () => {
+      rafRef.current = null;
+
+      const rect = section.getBoundingClientRect();
+
+      const scrollDistance = Math.max(
+        section.offsetHeight - window.innerHeight,
+        1,
+      );
+
+      const progress = clamp(
+        -rect.top / scrollDistance,
+        0,
+        1,
+      );
+
+      const rawIndex =
+        progress * Math.max(total - 1, 1);
+
+      const nextIndex = clamp(
+        Math.round(rawIndex),
+        0,
+        total - 1,
+      );
+
+      if (nextIndex !== activeIndexRef.current) {
+        activeIndexRef.current = nextIndex;
+        setActiveIndex(nextIndex);
+      }
+    };
+
+    const handleScroll = () => {
+      if (rafRef.current !== null) return;
+
+      rafRef.current =
+        window.requestAnimationFrame(updateFromScroll);
+    };
+
+    updateFromScroll();
+
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    window.addEventListener("resize", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, [total]);
+
+  /* ============================================================
+     GO TO PROJECT
+  ============================================================ */
+
+  const goToProject = useCallback(
+    (index: number) => {
+      if (index < 0 || index >= total) return;
+
+      const section = sectionRef.current;
+
+      if (!section) return;
+
+      const scrollDistance = Math.max(
+        section.offsetHeight - window.innerHeight,
+        1,
+      );
+
+      const targetProgress =
+        total <= 1 ? 0 : index / (total - 1);
+
+      const targetTop =
+        window.scrollY +
+        section.getBoundingClientRect().top +
+        scrollDistance * targetProgress;
+
+      window.scrollTo({
+        top: targetTop,
+        behavior: "smooth",
+      });
+    },
+    [total],
+  );
+
+  /* ============================================================
+     LEFT LIST AUTO SCROLL
+  ============================================================ */
+
+  useEffect(() => {
+    const list = document.querySelector(
+      "[data-project-list]",
+    );
+
+    if (!list) return;
+
+    const activeItem =
+      list.querySelector<HTMLElement>(
+        `[data-project-index="${activeIndex}"]`,
+      );
+
+    if (!activeItem) return;
+
+    const listRect = list.getBoundingClientRect();
+    const itemRect = activeItem.getBoundingClientRect();
+
+    const outsideTop = itemRect.top < listRect.top;
+    const outsideBottom =
+      itemRect.bottom > listRect.bottom;
+
+    if (outsideTop || outsideBottom) {
+      activeItem.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [activeIndex]);
+
+  /* ============================================================
+     EMPTY
+  ============================================================ */
 
   if (!featuredProjects.length) {
     return null;
@@ -348,977 +209,1137 @@ export default function ProjectsSection() {
     <section
       ref={sectionRef}
       id="work"
-      className="
-        relative
-
-        mx-[10px]
-
-        overflow-hidden
-
-        bg-transparent
-
-        text-white
-      "
+      className="relative mx-[10px]"
+      style={{
+        height: `${Math.max(total, 1) * 100}svh`,
+      }}
     >
-      {/* =====================================================
-          HEADER
-      ====================================================== */}
+      {/* ========================================================
+          STICKY FRAME
+      ======================================================== */}
 
       <div
         className="
-          relative
-          z-10
-
-          mx-auto
-
-          w-full
-          max-w-[1400px]
-
-          px-0
-
-          pb-5
-          pt-12
-
-          sm:pb-6
-          sm:pt-14
-
-          lg:pb-7
-          lg:pt-18
+          sticky
+          top-[90px]
+          h-[calc(100svh-20px)]
+          overflow-hidden
+          rounded-[20px]
+          border
+          border-white/[0.09]
+          bg-[#030504]
         "
       >
-        <div
-          className="
-            flex
-            flex-col
+        {/* ======================================================
+            SUBTLE BACKGROUND
+        ======================================================= */}
 
-            gap-4
-
-            lg:flex-row
-            lg:items-end
-            lg:justify-between
-          "
-        >
-          {/* =================================================
-              TITLE
-          ================================================== */}
-
-          <div>
-            <div
-              className="
-                mb-2.5
-
-                flex
-                items-center
-
-                gap-2.5
-              "
-            >
-              <span
-                className="
-                  h-[5px]
-                  w-[5px]
-
-                  rounded-full
-
-                  bg-[#B7FF00]
-
-                  shadow-[0_0_10px_rgba(183,255,0,0.3)]
-                "
-              />
-
-              <span
-                className="
-                  text-[8px]
-
-                  font-medium
-
-                  uppercase
-
-                  tracking-[0.3em]
-
-                  text-white/35
-                "
-              >
-                Selected Work
-              </span>
-            </div>
-
-            <h2
-              className="
-                font-[var(--font-space)]
-
-                text-[clamp(3rem,6.6vw,7rem)]
-
-                font-medium
-
-                leading-[0.82]
-
-                tracking-[-0.075em]
-
-                bg-gradient-to-r
-
-                from-white
-
-                via-white/75
-
-                to-[#B7FF00]/65
-
-                bg-clip-text
-
-                text-transparent
-              "
-            >
-              Selected
-              <br />
-              work.
-            </h2>
-          </div>
-
-          {/* =================================================
-              DESCRIPTION
-          ================================================== */}
-
-          <p
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div
             className="
-              max-w-[315px]
-
-              text-[11px]
-
-              leading-5
-
-              text-white/28
-
-              sm:text-xs
-              sm:leading-5.5
+              absolute
+              -right-[15%]
+              top-[15%]
+              h-[45%]
+              w-[45%]
+              rounded-full
+              bg-[#B7FF00]/[0.025]
+              blur-[100px]
             "
-          >
-            A curated selection of Shopify experiences
-            focused on design, development and ecommerce
-            performance.
-          </p>
-        </div>
-      </div>
-
-      {/* =====================================================
-          PROJECT STAGE
-      ====================================================== */}
-
-      <div
-        ref={stageRef}
-        className="
-          relative
-
-          z-10
-
-          h-[100svh]
-
-          w-full
-        "
-      >
-        <div
-          className="
-            relative
-
-            flex
-
-            h-full
-            w-full
-
-            items-center
-            justify-center
-          "
-        >
-          {/* =================================================
-              PROJECT STACK
-          ================================================== */}
+          />
 
           <div
             className="
-              relative
+              absolute
+              -bottom-[20%]
+              left-[20%]
+              h-[40%]
+              w-[40%]
+              rounded-full
+              bg-[#B7FF00]/[0.018]
+              blur-[100px]
+            "
+          />
+        </div>
 
-              h-[66svh]
+        {/* ======================================================
+            MAIN CONTENT
 
-              w-full
+            IMPORTANT:
+            Mobile = absolute layers
+            Desktop = grid
+        ======================================================= */}
 
-              sm:h-[69svh]
+        <div
+          className="
+            relative
+            z-10
+            h-full
+            min-h-0
 
-              lg:h-[72svh]
+            lg:grid
+            lg:grid-cols-[285px_minmax(0,1fr)]
+
+            xl:grid-cols-[310px_minmax(0,1fr)]
+          "
+        >
+          {/* ====================================================
+              LEFT / TITLE PANEL
+
+              MOBILE:
+              Absolute overlay — DOES NOT CREATE COLUMN GAP
+
+              DESKTOP:
+              Normal grid column
+          ===================================================== */}
+
+          <aside
+            className="
+              absolute
+              left-0
+              right-0
+              top-0
+              z-[100]
+              h-[185px]
+              min-h-0
+              px-5
+              pb-0
+              pt-6
+
+              sm:h-[215px]
+              sm:px-7
+              sm:pt-7
+
+              lg:relative
+              lg:h-full
+              lg:px-7
+              lg:py-8
+
+              xl:px-8
             "
           >
-            {featuredProjects.map(
-              (project, index) => {
-                /*
-                 * HARD-CODED CARD COLOR
-                 *
-                 * If there are more than 6 projects,
-                 * colors repeat safely.
-                 */
+            <div
+              className="
+                flex
+                h-full
+                min-h-0
+                flex-col
+              "
+            >
+              {/* =================================================
+                  EYEBROW
+              ================================================== */}
 
-                const cardBg =
-                  cardBackgrounds[
-                    index %
-                      cardBackgrounds.length
-                  ];
+              <div
+                className="
+                  flex
+                  shrink-0
+                  items-center
+                  gap-2
+                "
+              >
+                <span
+                  className="
+                    h-[5px]
+                    w-[5px]
+                    rounded-full
+                    bg-[#B7FF00]
+                    shadow-[0_0_12px_rgba(183,255,0,.5)]
+                  "
+                />
 
-                return (
-                  <article
-                    key={project.id}
+                <span
+                  className="
+                    text-[9px]
+                    uppercase
+                    tracking-[0.22em]
+                    text-white/75
+
+                    sm:text-[10px]
+                  "
+                >
+                  Our Work
+                </span>
+              </div>
+
+              {/* =================================================
+                  TITLE
+              ================================================== */}
+
+              <h2
+                className="
+                  mt-5
+                  shrink-0
+                  font-serif
+                  font-normal
+                  leading-[0.84]
+                  tracking-[-0.065em]
+
+                  text-[clamp(3rem,8vw,5.2rem)]
+
+                  sm:mt-6
+                  sm:text-[clamp(3.5rem,8vw,5.4rem)]
+
+                  lg:mt-6
+                  lg:text-[clamp(3.2rem,4.7vw,5.1rem)]
+
+                  xl:text-[clamp(3.5rem,4.5vw,5.3rem)]
+                "
+              >
+                <span
+                  className="
+                    block
+                    bg-gradient-to-r
+                    from-white
+                    via-white
+                    to-white/45
+                    bg-clip-text
+                    text-transparent
+                  "
+                >
+                  Selected
+                </span>
+
+                <span
+                  className="
+                    block
+                    bg-gradient-to-r
+                    from-[#B7FF00]
+                    via-[#D7FF68]
+                    to-white/40
+                    bg-clip-text
+                    text-transparent
+                  "
+                >
+                  Work
+                </span>
+              </h2>
+
+              {/* =================================================
+                  DESCRIPTION
+
+                  MOBILE:
+                  Compact so card can start earlier
+              ================================================== */}
+
+              <p
+                className="
+                  mt-3
+                  max-w-[255px]
+                  shrink-0
+                  text-[9px]
+                  leading-[1.65]
+                  text-white/42
+
+                  sm:mt-4
+                  sm:text-[10px]
+
+                  lg:mt-6
+                  lg:text-[11px]
+                  lg:leading-[1.8]
+                "
+              >
+                We partner with ambitious
+                brands to design and build
+                Shopify stores that not only
+                look stunning but perform at
+                their best.
+              </p>
+
+              {/* =================================================
+                  VIEW ALL — DESKTOP ONLY
+              ================================================== */}
+
+              <Link
+                href="/projects"
+                className="
+                  group
+                  mt-6
+                  hidden
+                  w-fit
+                  shrink-0
+                  items-center
+                  gap-3
+                  lg:flex
+                "
+              >
+                <span
+                  className="
+                    flex
+                    h-10
+                    w-10
+                    items-center
+                    justify-center
+                    rounded-full
+                    border
+                    border-white/[0.14]
+                    text-white/65
+                    transition-all
+                    duration-500
+                    group-hover:border-[#B7FF00]/50
+                    group-hover:bg-[#B7FF00]
+                    group-hover:text-black
+                  "
+                >
+                  <ArrowRight
+                    size={15}
+                    strokeWidth={1.2}
+                  />
+                </span>
+
+                <span
+                  className="
+                    border-b
+                    border-[#B7FF00]/45
+                    pb-1
+                    text-[9px]
+                    uppercase
+                    tracking-[0.16em]
+                    text-white/70
+                  "
+                >
+                  View All Projects
+                </span>
+              </Link>
+
+              {/* =================================================
+                  PROJECT LIST — DESKTOP
+              ================================================== */}
+
+              <div
+                data-project-list
+                className="
+                  mt-8
+                  hidden
+                  min-h-0
+                  w-full
+                  flex-1
+                  overflow-x-hidden
+                  overflow-y-auto
+                  pr-2
+                  lg:block
+                  [scrollbar-color:rgba(255,255,255,.12)_transparent]
+                  [scrollbar-width:thin]
+                "
+              >
+                <div
+                  className="
+                    relative
+                    space-y-5
+                    pb-5
+                  "
+                >
+                  <span
                     className="
-                      project-stack-card
-
                       absolute
-                      inset-0
-
-                      overflow-hidden
-
-                      rounded-[16px]
-
-                      border
-                      border-white/[0.09]
-
-                      shadow-[0_20px_60px_rgba(0,0,0,0.45)]
-
-                      will-change-transform
-
-                      sm:rounded-[20px]
-
-                      lg:rounded-[24px]
+                      bottom-2
+                      left-[3px]
+                      top-2
+                      w-px
+                      bg-white/[0.08]
                     "
-                    style={{
-                      background: `
-                        linear-gradient(
-                          135deg,
-                          ${cardBg} 0%,
-                          rgba(255,255,255,0.028) 48%,
-                          rgba(183,255,0,0.025) 100%
-                        )
-                      `,
-                    }}
-                  >
-                    {/* =========================================
-                        GLASS SURFACE
-                    ========================================== */}
+                  />
 
-                    <div
-                      aria-hidden="true"
-                      className="
-                        pointer-events-none
+                  {featuredProjects.map(
+                    (project, index) => {
+                      const active =
+                        index === activeIndex;
 
-                        absolute
-                        inset-0
+                      return (
+                        <button
+                          key={project.id}
+                          type="button"
+                          data-project-index={index}
+                          onClick={() =>
+                            goToProject(index)
+                          }
+                          className="
+                            group
+                            relative
+                            flex
+                            w-full
+                            items-start
+                            gap-3
+                            text-left
+                          "
+                        >
+                          <span
+                            className={`
+                              relative
+                              z-10
+                              mt-[5px]
+                              h-[7px]
+                              w-[7px]
+                              shrink-0
+                              rounded-full
+                              transition-all
+                              duration-500
 
-                        z-[1]
+                              ${
+                                active
+                                  ? "bg-[#B7FF00] shadow-[0_0_11px_rgba(183,255,0,.55)]"
+                                  : "bg-white/15"
+                              }
+                            `}
+                          />
 
-                        bg-gradient-to-br
+                          <span
+                            className={`
+                              w-[28px]
+                              shrink-0
+                              font-mono
+                              text-[18px]
+                              leading-none
+                              tracking-[-0.05em]
+                              transition-colors
+                              duration-500
 
-                        from-white/[0.045]
+                              ${
+                                active
+                                  ? "text-[#B7FF00]"
+                                  : "text-white/35"
+                              }
+                            `}
+                          >
+                            {String(index + 1).padStart(
+                              2,
+                              "0",
+                            )}
+                          </span>
 
-                        via-transparent
+                          <span className="min-w-0">
+                            <span
+                              className={`
+                                block
+                                truncate
+                                text-[9px]
+                                font-medium
+                                uppercase
+                                tracking-[0.1em]
+                                transition-colors
+                                duration-500
 
-                        to-[#B7FF00]/[0.018]
-                      "
-                    />
+                                ${
+                                  active
+                                    ? "text-white/90"
+                                    : "text-white/45"
+                                }
+                              `}
+                            >
+                              {project.projectName}
+                            </span>
 
-                    {/* =========================================
-                        IMAGE
-                    ========================================== */}
+                            <span
+                              className="
+                                mt-1
+                                block
+                                truncate
+                                text-[8px]
+                                text-white/30
+                              "
+                            >
+                              {project.projectType}
+                            </span>
+                          </span>
+                        </button>
+                      );
+                    },
+                  )}
+                </div>
+              </div>
 
-                    <div
-                      className="
-                        absolute
-                        inset-0
+              {/* =================================================
+                  DESKTOP ARROWS
+              ================================================== */}
 
-                        flex
+              <div
+                className="
+                  mt-auto
+                  hidden
+                  shrink-0
+                  gap-3
+                  pt-5
+                  lg:flex
+                "
+              >
+                <button
+                  type="button"
+                  aria-label="Previous project"
+                  disabled={activeIndex === 0}
+                  onClick={() =>
+                    goToProject(activeIndex - 1)
+                  }
+                  className="
+                    flex
+                    h-11
+                    w-11
+                    items-center
+                    justify-center
+                    rounded-full
+                    border
+                    border-white/[0.12]
+                    text-white/50
+                    transition-all
+                    duration-500
+                    hover:border-white/30
+                    hover:text-white
+                    disabled:cursor-not-allowed
+                    disabled:opacity-25
+                  "
+                >
+                  <ArrowLeft
+                    size={16}
+                    strokeWidth={1.2}
+                  />
+                </button>
 
-                        items-center
-                        justify-center
+                <button
+                  type="button"
+                  aria-label="Next project"
+                  disabled={
+                    activeIndex === total - 1
+                  }
+                  onClick={() =>
+                    goToProject(activeIndex + 1)
+                  }
+                  className="
+                    flex
+                    h-11
+                    w-11
+                    items-center
+                    justify-center
+                    rounded-full
+                    border
+                    border-[#B7FF00]/45
+                    text-[#B7FF00]
+                    transition-all
+                    duration-500
+                    hover:bg-[#B7FF00]
+                    hover:text-black
+                    disabled:cursor-not-allowed
+                    disabled:opacity-25
+                  "
+                >
+                  <ArrowRight
+                    size={16}
+                    strokeWidth={1.2}
+                  />
+                </button>
+              </div>
+            </div>
+          </aside>
 
-                        overflow-hidden
-                      "
-                    >
-                      <img
-                        src={project.thumbnail}
-                        alt={`${project.projectName} Shopify project`}
+          {/* ====================================================
+              PROJECT AREA
+
+              MOBILE:
+              Absolute full frame
+
+              DESKTOP:
+              Normal grid column
+          ===================================================== */}
+
+          <div
+            className="
+              absolute
+              inset-0
+              min-h-0
+              min-w-0
+              px-4
+              pb-7
+
+              sm:px-6
+
+              lg:relative
+              lg:inset-auto
+              lg:px-0
+              lg:pr-7
+
+              xl:pr-8
+            "
+          >
+            <div
+              className="
+                relative
+                h-full
+                min-h-0
+              "
+            >
+              {/* =================================================
+                  COUNTER
+              ================================================== */}
+
+              <div
+                className="
+                  absolute
+                  right-1
+                  top-4
+                  z-[300]
+                  flex
+                  items-baseline
+                  gap-2
+
+                  lg:right-1
+                  lg:top-7
+                "
+              >
+                <span
+                  className="
+                    font-mono
+                    text-[27px]
+                    leading-none
+                    tracking-[-0.06em]
+                    text-[#B7FF00]
+
+                    sm:text-[32px]
+
+                    lg:text-[38px]
+                  "
+                >
+                  {String(activeIndex + 1).padStart(
+                    2,
+                    "0",
+                  )}
+                </span>
+
+                <span
+                  className="
+                    text-[10px]
+                    text-white/25
+                  "
+                >
+                  /
+                </span>
+
+                <span
+                  className="
+                    text-[11px]
+                    text-white/40
+                  "
+                >
+                  {String(total).padStart(2, "0")}
+                </span>
+              </div>
+
+              {/* =================================================
+                  CARD STAGE
+
+                  THIS FIXES THE MOBILE GAP
+
+                  Mobile card starts immediately below
+                  the title/description area.
+
+                  No normal-flow column is created.
+              ================================================== */}
+
+              <div
+                className="
+                  absolute
+                  left-0
+                  right-0
+
+                  top-[185px]
+                  bottom-[4.5rem]
+
+                  min-[390px]:top-[190px]
+                  min-[430px]:top-[198px]
+
+                  sm:top-[215px]
+                  sm:bottom-[5rem]
+
+                  lg:bottom-[6%]
+                  lg:left-[1%]
+                  lg:right-[3%]
+                  lg:top-[9%]
+                "
+              >
+                {featuredProjects.map(
+                  (project, index) => {
+                    const depth =
+                      index - activeIndex;
+
+                    if (
+                      depth < 0 ||
+                      depth > MAX_STACK_CARDS
+                    ) {
+                      return null;
+                    }
+
+                    const isActive = depth === 0;
+
+                    /* =================================================
+                       STACK POSITION
+                    ================================================== */
+
+                    const translateX = isMobile
+                      ? depth * 8
+                      : depth * 20;
+
+                    const translateY = isMobile
+                      ? depth * 7
+                      : depth * 11;
+
+                    /* =================================================
+                       SCALE
+                    ================================================== */
+
+                    const scale = isMobile
+                      ? 1 - depth * 0.018
+                      : 1 - depth * 0.027;
+
+                    /* =================================================
+                       ANGLE
+                    ================================================== */
+
+                    const rotate = isActive
+                      ? 0
+                      : depth === 1
+                        ? 0.65
+                        : depth === 2
+                          ? 1.1
+                          : 1.45;
+
+                    /* =================================================
+                       OPACITY
+                    ================================================== */
+
+                    const opacity = isActive
+                      ? 1
+                      : depth === 1
+                        ? 0.9
+                        : depth === 2
+                          ? 0.7
+                          : 0.5;
+
+                    return (
+                      <article
+                        key={project.id}
                         className="
-                          project-card-image
+                          absolute
+                          inset-0
+                          overflow-hidden
+                          rounded-[18px]
+                          border
+                          border-white/[0.14]
+                          shadow-[0_28px_75px_rgba(0,0,0,.58)]
 
-                          block
-
-                          h-full
-                          w-full
-
-                          object-cover
-                          object-center
-
-                          max-md:object-contain
-
-                          select-none
-
-                          [backface-visibility:hidden]
+                          transition-[transform,opacity]
+                          duration-[720ms]
+                          ease-[cubic-bezier(.22,.75,.18,1)]
 
                           will-change-transform
+
+                          sm:rounded-[20px]
+
+                          lg:rounded-[23px]
                         "
-                        loading={
-                          index === 0
-                            ? "eager"
-                            : "lazy"
-                        }
-                        decoding="async"
-                        draggable={false}
-                      />
+                        style={{
+                          /*
+                           * IMPORTANT:
+                           * cardBg comes directly
+                           * from projects.json
+                           */
+                          backgroundColor:
+                            project.cardBg ||
+                            "#10140A",
 
-                      {/* Bottom gradient */}
+                          transform: `
+                            translate3d(
+                              ${translateX}px,
+                              ${translateY}px,
+                              0
+                            )
+                            scale(${scale})
+                            rotate(${rotate}deg)
+                          `,
 
-                      <div
-                        className="
-                          pointer-events-none
+                          opacity,
 
-                          absolute
-                          inset-0
-
-                          z-[2]
-
-                          bg-gradient-to-t
-
-                          from-black/[0.94]
-
-                          via-black/[0.25]
-
-                          to-transparent
-                        "
-                      />
-
-                      {/* Side vignette */}
-
-                      <div
-                        className="
-                          pointer-events-none
-
-                          absolute
-                          inset-0
-
-                          z-[2]
-
-                          bg-gradient-to-r
-
-                          from-black/[0.08]
-
-                          via-transparent
-
-                          to-black/[0.06]
-                        "
-                      />
-                    </div>
-
-                    {/* =========================================
-                        TOP META
-                    ========================================== */}
-
-                    <div
-                      className="
-                        absolute
-
-                        left-4
-                        right-4
-                        top-4
-
-                        z-20
-
-                        flex
-
-                        items-center
-                        justify-between
-
-                        sm:left-6
-                        sm:right-6
-                        sm:top-6
-
-                        lg:left-7
-                        lg:right-7
-                        lg:top-7
-                      "
-                    >
-                      {/* Counter */}
-
-                      <div
-                        className="
-                          flex
-
-                          items-center
-
-                          gap-2.5
-                        "
+                          zIndex: 100 - depth,
+                        }}
                       >
-                        <span
-                          className="
-                            text-[9px]
-
-                            font-medium
-
-                            tracking-[0.2em]
-
-                            text-white/65
-                          "
-                        >
-                          {String(
-                            index + 1,
-                          ).padStart(2, "0")}
-                        </span>
-
-                        <span
-                          className="
-                            h-px
-
-                            w-5
-
-                            bg-white/20
-                          "
-                        />
-
-                        <span
-                          className="
-                            text-[9px]
-
-                            tracking-[0.2em]
-
-                            text-white/25
-                          "
-                        >
-                          {String(
-                            featuredProjects.length,
-                          ).padStart(2, "0")}
-                        </span>
-                      </div>
-
-                      {/* Industry */}
-
-                      <span
-                        className="
-                          rounded-full
-
-                          border
-                          border-white/[0.11]
-
-                          bg-white/[0.035]
-
-                          px-3
-                          py-1.5
-
-                          text-[8px]
-
-                          uppercase
-
-                          tracking-[0.15em]
-
-                          text-white/50
-
-                          backdrop-blur-md
-                        "
-                      >
-                        {project.industry}
-                      </span>
-                    </div>
-
-                    {/* =========================================
-                        PROJECT CONTENT
-                    ========================================== */}
-
-                    <div
-                      className="
-                        absolute
-
-                        bottom-4
-                        left-4
-                        right-4
-
-                        z-20
-
-                        sm:bottom-6
-                        sm:left-6
-                        sm:right-6
-
-                        lg:bottom-7
-                        lg:left-7
-                        lg:right-7
-                      "
-                    >
-                      <div
-                        className="
-                          flex
-
-                          flex-col
-
-                          gap-3
-
-                          lg:flex-row
-                          lg:items-end
-                          lg:justify-between
-                        "
-                      >
-                        {/* LEFT */}
+                        {/* =================================================
+                            IMAGE
+                        ================================================== */}
 
                         <div
                           className="
-                            max-w-[820px]
+                            absolute
+                            inset-0
+                            overflow-hidden
+                            bg-black
                           "
                         >
+                          <img
+                            src={project.thumbnail}
+                            alt={project.projectName}
+                            draggable={false}
+                            loading={
+                              index === 0
+                                ? "eager"
+                                : "lazy"
+                            }
+                            decoding="async"
+                            className="
+                              h-full
+                              w-full
+                              select-none
+                              object-cover
+                              object-center
+
+                              max-[767px]:object-contain
+                              max-[767px]:object-center
+                            "
+                          />
+
+                          {/* =================================================
+                              BOTTOM SHADOW
+                          ================================================== */}
+
+                          <div
+                            className="
+                              pointer-events-none
+                              absolute
+                              inset-x-0
+                              bottom-0
+                              h-[54%]
+                              bg-gradient-to-t
+                              from-black/[0.96]
+                              via-black/[0.48]
+                              to-transparent
+                            "
+                          />
+                        </div>
+
+                        {/* =================================================
+                            CARD NUMBER
+                        ================================================== */}
+
+                        <span
+                          className="
+                            absolute
+                            left-5
+                            top-5
+                            z-30
+                            text-[9px]
+                            tracking-[0.14em]
+                            text-white/85
+
+                            sm:left-7
+                            sm:top-7
+
+                            lg:left-8
+                            lg:top-8
+                          "
+                        >
+                          {String(index + 1).padStart(
+                            2,
+                            "0",
+                          )}
+                        </span>
+
+                        {/* =================================================
+                            VIEW CASE STUDY
+                        ================================================== */}
+
+                        <Link
+                          href={`/projects/${project.slug}`}
+                          className="
+                            group/case
+                            absolute
+                            right-4
+                            top-4
+                            z-40
+
+                            inline-flex
+                            min-h-[36px]
+                            items-center
+                            gap-2
+
+                            rounded-full
+
+                            border
+                            border-white/[0.38]
+
+                            bg-gradient-to-r
+                            from-white/[0.28]
+                            via-white/[0.16]
+                            to-[#D9FF73]/[0.28]
+
+                            px-3.5
+                            py-2
+
+                            text-[7px]
+                            font-medium
+                            uppercase
+                            tracking-[0.08em]
+                            text-white
+
+                            shadow-[0_8px_25px_rgba(0,0,0,.2)]
+
+                            backdrop-blur-sm
+
+                            transition-all
+                            duration-500
+
+                            hover:border-[#B7FF00]/60
+                            hover:from-[#B7FF00]/35
+                            hover:via-white/[0.18]
+                            hover:to-white/[0.2]
+
+                            sm:right-6
+                            sm:top-6
+                            sm:min-h-[40px]
+                            sm:px-4
+
+                            lg:right-8
+                            lg:top-8
+                            lg:min-h-[42px]
+                            lg:px-4
+                            lg:text-[8px]
+                          "
+                        >
+                          <span>
+                            View Case Study
+                          </span>
+
+                          <ArrowUpRight
+                            size={13}
+                            strokeWidth={1.2}
+                            className="
+                              transition-transform
+                              duration-500
+                              group-hover/case:translate-x-0.5
+                              group-hover/case:-translate-y-0.5
+                            "
+                          />
+                        </Link>
+
+                        {/* =================================================
+                            PROJECT DETAILS
+                        ================================================== */}
+
+                        <div
+                          className="
+                            absolute
+                            bottom-5
+                            left-5
+                            right-5
+                            z-30
+
+                            sm:bottom-7
+                            sm:left-7
+                            sm:right-7
+
+                            lg:bottom-8
+                            lg:left-8
+                            lg:right-8
+                          "
+                        >
+                          {/* PROJECT TYPE */}
+
                           <p
                             className="
-                              mb-1.5
-
-                              text-[8px]
-
+                              mb-2
+                              text-[7px]
                               font-medium
-
                               uppercase
+                              tracking-[0.18em]
+                              text-[#B7FF00]
 
-                              tracking-[0.22em]
+                              sm:text-[8px]
 
-                              text-[#B7FF00]/70
+                              lg:text-[9px]
                             "
                           >
                             {project.projectType}
                           </p>
 
+                          {/* PROJECT NAME */}
+
                           <h3
                             className="
-                              font-[var(--font-space)]
+                              max-w-full
+                              overflow-hidden
+                              text-ellipsis
+                              whitespace-nowrap
 
-                              text-[clamp(2rem,5.4vw,6rem)]
-
+                              font-sans
                               font-medium
-
                               leading-[0.86]
+                              tracking-[-0.075em]
+                              text-white
 
-                              tracking-[-0.07em]
+                              text-[clamp(2rem,6vw,5.5rem)]
 
-                              bg-gradient-to-r
+                              sm:text-[clamp(2.5rem,6vw,5rem)]
 
-                              from-white
-
-                              via-white/80
-
-                              to-white/25
-
-                              bg-clip-text
-
-                              text-transparent
+                              lg:text-[clamp(3rem,5.4vw,5.5rem)]
                             "
                           >
                             {project.projectName}
                           </h3>
 
-                          <p
-                            className="
-                              mt-2
+                          {/* BRAND */}
 
-                              text-[10px]
+                          {project.brand && (
+                            <p
+                              className="
+                                mt-3
+                                font-serif
+                                text-[11px]
+                                italic
+                                text-[#B7FF00]/85
 
-                              text-white/30
+                                sm:text-[13px]
 
-                              sm:text-xs
-                            "
-                          >
-                            {project.brand}
-                          </p>
-                        </div>
+                                lg:text-[15px]
+                              "
+                            >
+                              — {project.brand}
+                            </p>
+                          )}
 
-                        {/* RIGHT */}
+                          {/* ROLES */}
 
-                        <div
-                          className="
-                            flex
+                          {project.myRole?.length > 0 && (
+                            <div
+                              className="
+                                mt-4
+                                flex
+                                flex-wrap
+                                gap-x-4
+                                gap-y-1.5
 
-                            shrink-0
-
-                            flex-col
-
-                            items-start
-
-                            gap-2.5
-
-                            lg:items-end
-                          "
-                        >
-                          {/* Roles */}
-
-                          <div
-                            className="
-                              flex
-
-                              flex-wrap
-
-                              gap-1
-
-                              lg:justify-end
-                            "
-                          >
-                            {project.myRole
-                              .slice(0, 3)
-                              .map(
-                                (role) => (
+                                sm:gap-x-5
+                              "
+                            >
+                              {project.myRole
+                                .slice(0, 4)
+                                .map((role) => (
                                   <span
                                     key={role}
                                     className="
-                                      rounded-full
-
-                                      border
-                                      border-white/[0.1]
-
-                                      bg-white/[0.03]
-
-                                      px-2.5
-                                      py-1.5
-
-                                      text-[8px]
-
+                                      text-[6px]
                                       uppercase
+                                      tracking-[0.12em]
+                                      text-white/50
 
-                                      tracking-[0.08em]
+                                      sm:text-[7px]
 
-                                      text-white/45
-
-                                      backdrop-blur-md
+                                      lg:text-[8px]
                                     "
                                   >
                                     {role}
                                   </span>
-                                ),
-                              )}
-                          </div>
+                                ))}
+                            </div>
+                          )}
 
-                          {/* CTA */}
+                          {/* INDUSTRY */}
 
-                          <Link
-                            href={`/projects/${project.slug}`}
-                            className="
-                              group
-
-                              inline-flex
-
-                              items-center
-
-                              gap-2
-
-                              text-[10px]
-
-                              font-medium
-
-                              text-white/65
-
-                              sm:text-xs
-                            "
-                          >
-                            <span
+                          {project.industry && (
+                            <div
                               className="
-                                transition-colors
+                                mt-2
+                                text-[7px]
+                                uppercase
+                                tracking-[0.12em]
+                                text-white/25
 
-                                duration-300
-
-                                group-hover:text-white
+                                lg:text-[8px]
                               "
                             >
-                              View Case Study
-                            </span>
-
-                            <span
-                              className="
-                                flex
-
-                                h-8
-                                w-8
-
-                                items-center
-                                justify-center
-
-                                rounded-full
-
-                                border
-                                border-white/[0.13]
-
-                                bg-white/[0.035]
-
-                                transition-all
-
-                                duration-500
-
-                                group-hover:-translate-y-0.5
-
-                                group-hover:translate-x-0.5
-
-                                group-hover:border-[#B7FF00]/40
-
-                                group-hover:bg-[#B7FF00]
-
-                                group-hover:text-black
-                              "
-                            >
-                              <ArrowUpRight
-                                size={14}
-                                strokeWidth={1.5}
-                              />
-                            </span>
-                          </Link>
+                              {project.industry}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    </div>
-                  </article>
-                );
-              },
-            )}
-          </div>
+                      </article>
+                    );
+                  },
+                )}
+              </div>
 
-          {/* =================================================
-              COUNTER
-          ================================================== */}
+              {/* =================================================
+                  MOBILE PROGRESS
+              ================================================== */}
 
-          <div
-            className="
-              absolute
+              <div
+                className="
+                  absolute
+                  bottom-0
+                  left-0
+                  right-0
+                  z-[250]
 
-              bottom-3
-              left-4
+                  flex
+                  items-center
+                  justify-between
 
-              z-30
+                  lg:hidden
+                "
+              >
+                {/* DOTS */}
 
-              flex
+                <div
+                  className="
+                    flex
+                    items-center
+                    gap-1.5
+                  "
+                >
+                  {featuredProjects.map(
+                    (_, index) => {
+                      const active =
+                        index === activeIndex;
 
-              items-center
+                      return (
+                        <button
+                          key={index}
+                          type="button"
+                          aria-label={`Go to project ${
+                            index + 1
+                          }`}
+                          onClick={() =>
+                            goToProject(index)
+                          }
+                          className="
+                            h-[3px]
+                            rounded-full
+                            transition-all
+                            duration-500
+                          "
+                          style={{
+                            width: active ? 28 : 7,
+                            backgroundColor:
+                              active
+                                ? "#B7FF00"
+                                : "rgba(255,255,255,.14)",
+                          }}
+                        />
+                      );
+                    },
+                  )}
+                </div>
 
-              gap-1.5
+                {/* SCROLL LABEL */}
 
-              sm:bottom-5
-              sm:left-6
-
-              lg:bottom-6
-              lg:left-7
-            "
-          >
-            <span
-              ref={progressRef}
-              className="
-                text-[9px]
-
-                font-medium
-
-                tracking-[0.2em]
-
-                text-[#B7FF00]/80
-              "
-            >
-              01
-            </span>
-
-            <span
-              className="
-                text-[9px]
-
-                tracking-[0.2em]
-
-                text-white/22
-              "
-            >
-              /
-              {String(
-                featuredProjects.length,
-              ).padStart(2, "0")}
-            </span>
-          </div>
-
-          {/* =================================================
-              SCROLL HINT
-          ================================================== */}
-
-          <div
-            className="
-              absolute
-
-              bottom-4
-              left-1/2
-
-              z-30
-
-              hidden
-
-              -translate-x-1/2
-
-              md:block
-            "
-          >
-            <span
-              className="
-                text-[8px]
-
-                uppercase
-
-                tracking-[0.28em]
-
-                text-white/18
-              "
-            >
-              Scroll to explore
-            </span>
+                <span
+                  className="
+                    text-[7px]
+                    uppercase
+                    tracking-[0.16em]
+                    text-white/30
+                  "
+                >
+                  {activeIndex === total - 1
+                    ? "End"
+                    : "Scroll to explore"}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* =====================================================
-          VIEW ALL
-      ====================================================== */}
-
-      <div
-        className="
-          relative
-          z-10
-
-          mx-auto
-
-          flex
-
-          w-full
-          max-w-[1400px]
-
-          flex-col
-
-          items-center
-
-          px-0
-
-          pb-12
-          pt-5
-
-          text-center
-
-          sm:pb-16
-          sm:pt-6
-
-          lg:pb-20
-          lg:pt-7
-        "
-      >
-        <p
-          className="
-            mb-2
-
-            text-[8px]
-
-            uppercase
-
-            tracking-[0.25em]
-
-            text-white/20
-          "
-        >
-          Explore more work
-        </p>
-
-        <Link
-          href="/projects"
-          className="
-            group
-
-            relative
-
-            inline-flex
-
-            items-center
-
-            gap-2.5
-
-            font-[var(--font-space)]
-
-            text-[clamp(1.8rem,4.2vw,4.2rem)]
-
-            font-medium
-
-            leading-none
-
-            tracking-[-0.065em]
-
-            bg-gradient-to-r
-
-            from-white
-
-            via-white/70
-
-            to-[#B7FF00]/60
-
-            bg-clip-text
-
-            text-transparent
-          "
-        >
-          <span>
-            View All Projects
-          </span>
-
-          <span
-            className="
-              flex
-
-              h-9
-              w-9
-
-              shrink-0
-
-              items-center
-              justify-center
-
-              rounded-full
-
-              border
-              border-white/[0.11]
-
-              text-white/55
-
-              transition-all
-
-              duration-500
-
-              group-hover:-translate-y-1
-
-              group-hover:translate-x-1
-
-              group-hover:border-[#B7FF00]/40
-
-              group-hover:bg-[#B7FF00]
-
-              group-hover:text-black
-
-              sm:h-11
-              sm:w-11
-
-              lg:h-13
-              lg:w-13
-            "
-          >
-            <ArrowUpRight
-              size={18}
-              strokeWidth={1.5}
-            />
-          </span>
-
-          <span
-            className="
-              absolute
-
-              -bottom-1.5
-              left-0
-
-              h-px
-
-              w-0
-
-              bg-[#B7FF00]/70
-
-              transition-all
-
-              duration-700
-
-              group-hover:w-[calc(100%-2.75rem)]
-            "
-          />
-        </Link>
       </div>
     </section>
   );
