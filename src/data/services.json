@@ -6,13 +6,21 @@
     "shortTitle": "Shopify Development",
     "description": "Custom Shopify stores built around your brand, products, customers, and growth goals.",
     "icon": "shopify",
-    "image": "/images/services/shopify-development.webp",
+
+    "media": {
+      "type": "video",
+      "videoUrl": "",
+      "thumbnail": "/images/services/shopify-development.webp"
+    },
+
     "featured": true,
+
     "meta": {
       "delivery": "7–21 Days",
       "type": "Custom Development",
       "platform": "Shopify"
     },
+
     "problem": [
       "Starting a new Shopify store",
       "Outdated storefront",
@@ -20,6 +28,7 @@
       "Limited store functionality",
       "Low-converting layouts"
     ],
+
     "includes": [
       "Shopify 2.0 setup",
       "Custom theme development",
@@ -32,6 +41,7 @@
       "Basic SEO setup",
       "Launch support"
     ],
+
     "deliverables": [
       "Fully responsive Shopify store",
       "Custom theme implementation",
@@ -40,6 +50,7 @@
       "Integrated apps",
       "Tested and launch-ready storefront"
     ],
+
     "process": [
       {
         "step": 1,
@@ -67,6 +78,7 @@
         "description": "Finalize the store, complete quality checks, and prepare everything for launch."
       }
     ],
+
     "technologies": [
       "Shopify",
       "Shopify 2.0",
@@ -75,25 +87,30 @@
       "HTML",
       "CSS"
     ],
+
     "bestFor": [
       "New Shopify stores",
       "Growing e-commerce brands",
       "DTC businesses",
       "Businesses launching online"
     ],
+
     "timeline": "7–21 Days",
     "startingPrice": "Starting from $500",
+
     "tags": [
       "Shopify 2.0",
       "Liquid",
       "Custom Development",
       "Apps"
     ],
+
     "booking": {
       "available": true,
       "buttonText": "Book This Service"
     }
   },
+
   {
     "id": 2,
     "slug": "shopify-theme-customization",
@@ -101,13 +118,21 @@
     "shortTitle": "Theme Customization",
     "description": "Transform your existing Shopify theme into a unique, polished, and conversion-focused storefront.",
     "icon": "theme",
-    "image": "/images/services/theme-customization.webp",
+
+    "media": {
+      "type": "video",
+      "videoUrl": "",
+      "thumbnail": "/images/services/theme-customization.webp"
+    },
+
     "featured": true,
+
     "meta": {
       "delivery": "2–10 Days",
       "type": "Theme Development",
       "platform": "Shopify"
     },
+
     "problem": [
       "Generic Shopify theme",
       "Design does not match the brand",
@@ -115,6 +140,7 @@
       "Poor mobile layout",
       "Theme limitations"
     ],
+
     "includes": [
       "Theme customization",
       "Custom Liquid",
@@ -127,6 +153,7 @@
       "Third-party app integration",
       "Bug fixing"
     ],
+
     "deliverables": [
       "Customized Shopify theme",
       "Custom sections and components",
@@ -135,6 +162,7 @@
       "Integrated functionality",
       "Tested implementation"
     ],
+
     "process": [
       {
         "step": 1,
@@ -162,6 +190,7 @@
         "description": "Complete final testing and deliver a polished, production-ready storefront."
       }
     ],
+
     "technologies": [
       "Shopify",
       "Liquid",
@@ -169,25 +198,30 @@
       "HTML",
       "CSS"
     ],
+
     "bestFor": [
       "Existing Shopify stores",
       "Premium theme customization",
       "Store redesigns",
       "Brands using Shopify themes"
     ],
+
     "timeline": "2–10 Days",
     "startingPrice": "Starting from $150",
+
     "tags": [
       "Theme Editing",
       "Liquid",
       "Custom Sections",
       "Responsive"
     ],
+
     "booking": {
       "available": true,
       "buttonText": "Book This Service"
     }
   },
+
   {
     "id": 3,
     "slug": "ui-ux-design",
@@ -195,13 +229,21 @@
     "shortTitle": "UI / UX Design",
     "description": "Modern, intuitive, and conversion-focused interfaces designed to create better shopping experiences.",
     "icon": "design",
-    "image": "/images/services/ui-ux.webp",
+
+    "media": {
+      "type": "video",
+      "videoUrl": "",
+      "thumbnail": "/images/services/ui-ux.webp"
+    },
+
     "featured": true,
+
     "meta": {
       "delivery": "3–14 Days",
       "type": "UI / UX Design",
       "platform": "Figma"
     },
+
     "problem": [
       "Confusing user experience",
       "Outdated visual design",
@@ -209,6 +251,7 @@
       "Weak mobile experience",
       "Low user engagement"
     ],
+
     "includes": [
       "UI / UX strategy",
       "Shopify homepage design",
@@ -221,6 +264,7 @@
       "Design system direction",
       "Developer-ready layouts"
     ],
+
     "deliverables": [
       "High-fidelity UI designs",
       "Responsive layouts",
@@ -229,6 +273,7 @@
       "Design system",
       "Developer-ready specifications"
     ],
+
     "process": [
       {
         "step": 1,
@@ -256,6 +301,7 @@
         "description": "Prepare organized Figma files and specifications for development."
       }
     ],
+
     "technologies": [
       "Figma",
       "UI Design",
@@ -263,6 +309,7 @@
       "Design Systems",
       "Responsive Design"
     ],
+
     "bestFor": [
       "New Shopify stores",
       "Store redesigns",
@@ -270,19 +317,23 @@
       "Landing pages",
       "Product experiences"
     ],
+
     "timeline": "3–14 Days",
     "startingPrice": "Starting from $200",
+
     "tags": [
       "UI Design",
       "UX Strategy",
       "Figma",
       "Responsive"
     ],
+
     "booking": {
       "available": true,
       "buttonText": "Book This Service"
     }
   },
+
   {
     "id": 4,
     "slug": "conversion-rate-optimization",
@@ -290,13 +341,21 @@
     "shortTitle": "CRO",
     "description": "Strategic improvements that remove friction, strengthen the customer journey, and help turn more visitors into customers.",
     "icon": "conversion",
-    "image": "/images/services/cro.webp",
+
+    "media": {
+      "type": "video",
+      "videoUrl": "",
+      "thumbnail": "/images/services/cro.webp"
+    },
+
     "featured": true,
+
     "meta": {
       "delivery": "3–14 Days",
       "type": "Optimization",
       "platform": "Shopify"
     },
+
     "problem": [
       "High bounce rate",
       "Low conversion rate",
@@ -304,6 +363,7 @@
       "Poor customer journey",
       "Unclear calls to action"
     ],
+
     "includes": [
       "Store UX audit",
       "Homepage analysis",
@@ -316,6 +376,7 @@
       "Conversion recommendations",
       "Implementation support"
     ],
+
     "deliverables": [
       "CRO audit",
       "Prioritized recommendations",
@@ -324,6 +385,7 @@
       "Product page improvements",
       "Implementation guidance"
     ],
+
     "process": [
       {
         "step": 1,
@@ -351,6 +413,7 @@
         "description": "Review the results and identify opportunities for further optimization."
       }
     ],
+
     "technologies": [
       "Shopify",
       "CRO",
@@ -358,6 +421,7 @@
       "Analytics",
       "A/B Testing"
     ],
+
     "bestFor": [
       "Growing Shopify stores",
       "Low-converting stores",
@@ -365,19 +429,23 @@
       "High-traffic stores",
       "Product-focused businesses"
     ],
+
     "timeline": "3–14 Days",
     "startingPrice": "Starting from $250",
+
     "tags": [
       "CRO",
       "Product Pages",
       "UX",
       "Optimization"
     ],
+
     "booking": {
       "available": true,
       "buttonText": "Book This Service"
     }
   },
+
   {
     "id": 5,
     "slug": "performance-optimization",
@@ -385,13 +453,21 @@
     "shortTitle": "Performance",
     "description": "Technical optimization focused on faster loading, smoother interactions, and a better overall shopping experience.",
     "icon": "performance",
-    "image": "/images/services/performance.webp",
+
+    "media": {
+      "type": "video",
+      "videoUrl": "",
+      "thumbnail": "/images/services/performance.webp"
+    },
+
     "featured": true,
+
     "meta": {
       "delivery": "2–7 Days",
       "type": "Performance",
       "platform": "Shopify"
     },
+
     "problem": [
       "Slow page loading",
       "Heavy images",
@@ -399,6 +475,7 @@
       "App-related performance issues",
       "Poor mobile performance"
     ],
+
     "includes": [
       "Performance audit",
       "Image optimization",
@@ -411,6 +488,7 @@
       "Core Web Vitals improvements",
       "Mobile performance improvements"
     ],
+
     "deliverables": [
       "Performance audit",
       "Optimized storefront",
@@ -419,6 +497,7 @@
       "Improved loading experience",
       "Performance recommendations"
     ],
+
     "process": [
       {
         "step": 1,
@@ -446,6 +525,7 @@
         "description": "Review the final performance improvements and provide recommendations."
       }
     ],
+
     "technologies": [
       "Shopify",
       "Liquid",
@@ -453,6 +533,7 @@
       "Core Web Vitals",
       "Performance Optimization"
     ],
+
     "bestFor": [
       "Slow Shopify stores",
       "High-traffic stores",
@@ -460,19 +541,23 @@
       "Stores with many apps",
       "Growing e-commerce brands"
     ],
+
     "timeline": "2–7 Days",
     "startingPrice": "Starting from $150",
+
     "tags": [
       "Speed",
       "Core Web Vitals",
       "Optimization",
       "Performance"
     ],
+
     "booking": {
       "available": true,
       "buttonText": "Book This Service"
     }
   },
+
   {
     "id": 6,
     "slug": "ongoing-support-maintenance",
@@ -480,13 +565,21 @@
     "shortTitle": "Support & Maintenance",
     "description": "Reliable ongoing Shopify support to keep your store updated, optimized, and ready for continuous growth.",
     "icon": "support",
-    "image": "/images/services/support.webp",
+
+    "media": {
+      "type": "video",
+      "videoUrl": "",
+      "thumbnail": "/images/services/support.webp"
+    },
+
     "featured": true,
+
     "meta": {
       "delivery": "Ongoing",
       "type": "Monthly Support",
       "platform": "Shopify"
     },
+
     "problem": [
       "Need ongoing technical support",
       "Regular store updates",
@@ -494,6 +587,7 @@
       "Continuous optimization",
       "No dedicated Shopify developer"
     ],
+
     "includes": [
       "Store maintenance",
       "Bug fixing",
@@ -506,6 +600,7 @@
       "Technical support",
       "Ongoing optimization"
     ],
+
     "deliverables": [
       "Completed maintenance tasks",
       "Bug fixes",
@@ -514,6 +609,7 @@
       "Performance improvements",
       "Ongoing optimization"
     ],
+
     "process": [
       {
         "step": 1,
@@ -541,6 +637,7 @@
         "description": "Continue improving and maintaining the Shopify store as your business grows."
       }
     ],
+
     "technologies": [
       "Shopify",
       "Liquid",
@@ -548,6 +645,7 @@
       "Shopify Apps",
       "Performance Optimization"
     ],
+
     "bestFor": [
       "Growing Shopify brands",
       "Established stores",
@@ -555,14 +653,17 @@
       "Businesses without an in-house developer",
       "Long-term Shopify projects"
     ],
+
     "timeline": "Ongoing",
     "startingPrice": "Custom Monthly Plan",
+
     "tags": [
       "Maintenance",
       "Bug Fixes",
       "Optimization",
       "Support"
     ],
+
     "booking": {
       "available": true,
       "buttonText": "Book This Service"
